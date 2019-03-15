@@ -236,7 +236,7 @@ GoCD.script {
     }
 
     pipeline('upload-addons') {
-      group = 'go-cd'
+      group = 'enterprise'
 
       environmentVariables = [
           'GO_ENTERPRISE_DIR'         : '../go-enterprise',
@@ -275,13 +275,9 @@ GoCD.script {
           pipeline = 'go-addon-build'
           stage = 'build-addons'
         }
-        dependency('installers') {
-          pipeline = 'installers'
-          stage = 'dist'
-        }
-        dependency('code-sign') {
-          pipeline = 'code-sign'
-          stage = 'metadata'
+        dependency('regression-pg-gauge') {
+          pipeline = 'regression-pg-gauge'
+          stage = 'regression-selenium'
         }
       }
 

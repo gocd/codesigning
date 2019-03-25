@@ -12,7 +12,7 @@ GoCD.script {
         GITHUB_TOKEN: 'AES:BpIf28a8CFYsdHCtQ1W2ag==:669s8sbasqeh07SxM+n1rxxuWFcHqRkcUmiNchOSeHJg88br3rEeHvFAK9Jt5nAG',
       ]
       materials {
-        git {
+        git('ReleaseActivityScripts') {
           branch = 'master'
           shallowClone = false
           url = 'https://github.com/gocd/release-activity-scripts'

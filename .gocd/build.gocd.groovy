@@ -134,7 +134,11 @@ GoCD.script {
                 add(fetchArtifactTask('rpm'))
                 add(fetchArtifactTask('meta'))
                 bash {
-                  commandString = 'rake --trace rpm:sign rpm:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}] yum:createrepo[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
+                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  workingDir = 'codesigning'
+                }
+                bash {
+                  commandString = 'bundle exec rake --trace rpm:sign rpm:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}] yum:createrepo[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
                   workingDir = 'codesigning'
                 }
               }
@@ -146,7 +150,11 @@ GoCD.script {
                 add(fetchArtifactTask('deb'))
                 add(fetchArtifactTask('meta'))
                 bash {
-                  commandString = 'rake --trace deb:sign[${EXPERIMENTAL_DOWNLOAD_BUCKET}] deb:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}] apt:createrepo[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
+                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  workingDir = 'codesigning'
+                }
+                bash {
+                  commandString = 'bundle exec rake --trace deb:sign[${EXPERIMENTAL_DOWNLOAD_BUCKET}] deb:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}] apt:createrepo[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
                   workingDir = 'codesigning'
                 }
               }
@@ -157,7 +165,11 @@ GoCD.script {
                 add(fetchArtifactTask('zip'))
                 add(fetchArtifactTask('meta'))
                 bash {
-                  commandString = 'rake --trace zip:sign zip:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
+                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  workingDir = 'codesigning'
+                }
+                bash {
+                  commandString = 'bundle exec rake --trace zip:sign zip:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
                   workingDir = 'codesigning'
                 }
               }
@@ -168,8 +180,12 @@ GoCD.script {
                 addAll(cleanTasks())
                 add(fetchArtifactTask('win'))
                 add(fetchArtifactTask('meta'))
+                bash {
+                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  workingDir = 'codesigning'
+                }
                 exec {
-                  commandLine = ['rake', '--trace', 'win:sign', 'win:upload[%EXPERIMENTAL_DOWNLOAD_BUCKET%]']
+                  commandLine = ['bundle', 'exec', 'rake', '--trace', 'win:sign', 'win:upload[%EXPERIMENTAL_DOWNLOAD_BUCKET%]']
                   workingDir = 'codesigning'
                 }
               }
@@ -181,7 +197,11 @@ GoCD.script {
                 add(fetchArtifactTask('osx'))
                 add(fetchArtifactTask('meta'))
                 bash {
-                  commandString = 'rake --trace osx:sign osx:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
+                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  workingDir = 'codesigning'
+                }
+                bash {
+                  commandString = 'bundle exec rake --trace osx:sign osx:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
                   workingDir = 'codesigning'
                 }
               }
@@ -205,7 +225,11 @@ GoCD.script {
                 addAll(cleanTasks())
                 add(fetchArtifactTask('meta'))
                 bash {
-                  commandString = 'rake --trace metadata:aggregate_jsons[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
+                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  workingDir = 'codesigning'
+                }
+                bash {
+                  commandString = 'bundle exec rake --trace metadata:aggregate_jsons[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
                   workingDir = 'codesigning'
                 }
               }
@@ -225,7 +249,11 @@ GoCD.script {
                 add(fetchArtifactTask('meta'))
                 add(getArtifact())
                 bash {
-                  commandString = 'rake --trace metadata:generate[${UPDATE_CHECK_BUCKET}]'
+                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  workingDir = 'codesigning'
+                }
+                bash {
+                  commandString = 'bundle exec rake --trace metadata:generate[${UPDATE_CHECK_BUCKET}]'
                   workingDir = 'codesigning'
                 }
               }
@@ -316,11 +344,15 @@ GoCD.script {
                   destination = "codesigning/src/pkg_for_upload"
                 }
                 bash {
-                  commandString = 'export REPO_URL=https://${BUILD_MAP_USER}:${BUILD_MAP_PASSWORD}@github.com/gocd-private/gocd_addons_compatibility.git && rake --trace determine_version_and_update_map[${GO_ENTERPRISE_DIR},${REPO_URL}]'
+                  commandString = "bundle install --jobs 4 --path .bundle --clean"
                   workingDir = 'codesigning'
                 }
                 bash {
-                  commandString = 'export CORRESPONDING_GOCD_VERSION=$(cat target/gocd_version.txt) && rake --trace fetch_and_upload_addons[${ADDONS_EXPERIMENTAL_BUCKET},${CORRESPONDING_GOCD_VERSION}]'
+                  commandString = 'export REPO_URL=https://${BUILD_MAP_USER}:${BUILD_MAP_PASSWORD}@github.com/gocd-private/gocd_addons_compatibility.git && bundle exec rake --trace determine_version_and_update_map[${GO_ENTERPRISE_DIR},${REPO_URL}]'
+                  workingDir = 'codesigning'
+                }
+                bash {
+                  commandString = 'export CORRESPONDING_GOCD_VERSION=$(cat target/gocd_version.txt) && bundle exec rake --trace fetch_and_upload_addons[${ADDONS_EXPERIMENTAL_BUCKET},${CORRESPONDING_GOCD_VERSION}]'
                   workingDir = 'codesigning'
                 }
               }
@@ -396,7 +428,11 @@ GoCD.script {
                   destination = "codesigning/src"
                 }
                 bash {
-                  commandString = 'rake --trace promote:copy_binaries_from_experimental_to_stable[${EXPERIMENTAL_DOWNLOAD_BUCKET},${STABLE_DOWNLOAD_BUCKET}]'
+                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  workingDir = 'codesigning'
+                }
+                bash {
+                  commandString = 'bundle exec rake --trace promote:copy_binaries_from_experimental_to_stable[${EXPERIMENTAL_DOWNLOAD_BUCKET},${STABLE_DOWNLOAD_BUCKET}]'
                   workingDir = 'codesigning'
                 }
               }
@@ -419,7 +455,11 @@ GoCD.script {
                   destination = "codesigning/src"
                 }
                 bash {
-                  commandString = 'rake --trace apt:createrepo[${STABLE_DOWNLOAD_BUCKET}]'
+                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  workingDir = 'codesigning'
+                }
+                bash {
+                  commandString = 'bundle exec rake --trace apt:createrepo[${STABLE_DOWNLOAD_BUCKET}]'
                   workingDir = 'codesigning'
                 }
               }
@@ -436,7 +476,11 @@ GoCD.script {
                   destination = "codesigning/src"
                 }
                 bash {
-                  commandString = 'rake --trace yum:createrepo[${STABLE_DOWNLOAD_BUCKET}]'
+                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  workingDir = 'codesigning'
+                }
+                bash {
+                  commandString = 'bundle exec rake --trace yum:createrepo[${STABLE_DOWNLOAD_BUCKET}]'
                   workingDir = 'codesigning'
                 }
               }
@@ -459,12 +503,16 @@ GoCD.script {
                   destination = "codesigning/src"
                 }
                 bash {
-                  commandString = 'rake --trace promote:copy_addon_from_experimental_to_stable[${ADDONS_EXPERIMENTAL_BUCKET},${ADDONS_STABLE_BUCKET}]'
+                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  workingDir = 'codesigning'
+                }
+                bash {
+                  commandString = 'bundle exec rake --trace promote:copy_addon_from_experimental_to_stable[${ADDONS_EXPERIMENTAL_BUCKET},${ADDONS_STABLE_BUCKET}]'
                   workingDir = 'codesigning'
                 }
 
                 bash {
-                  commandString = 'rake --trace promote:promote_addons_metadata[${ADDONS_EXPERIMENTAL_BUCKET},${ADDONS_STABLE_BUCKET}]'
+                  commandString = 'bundle exec rake --trace promote:promote_addons_metadata[${ADDONS_EXPERIMENTAL_BUCKET},${ADDONS_STABLE_BUCKET}]'
                   workingDir = 'codesigning'
                 }
               }
@@ -487,7 +535,11 @@ GoCD.script {
                   destination = "codesigning/src"
                 }
                 bash {
-                  commandString = 'rake --trace metadata:releases_json[${STABLE_DOWNLOAD_BUCKET}]'
+                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  workingDir = 'codesigning'
+                }
+                bash {
+                  commandString = 'bundle exec rake --trace metadata:releases_json[${STABLE_DOWNLOAD_BUCKET}]'
                   workingDir = 'codesigning'
                 }
               }
@@ -510,7 +562,11 @@ GoCD.script {
                   destination = "codesigning/src"
                 }
                 bash {
-                  commandString = 'rake --trace promote:update_check_json[${UPDATE_CHECK_BUCKET}]'
+                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  workingDir = 'codesigning'
+                }
+                bash {
+                  commandString = 'bundle exec rake --trace promote:update_check_json[${UPDATE_CHECK_BUCKET}]'
                   workingDir = 'codesigning'
                 }
               }

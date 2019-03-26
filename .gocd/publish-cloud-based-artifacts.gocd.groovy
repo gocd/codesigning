@@ -79,18 +79,22 @@ GoCD.script {
                   stage = 'dist'
                   destination = "docker-gocd-server"
                 }
+                bash {
+                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  workingDir = 'codesigning'
+                }
                 exec {
                   commandLine = ['bash', '-c', 'git config --global user.email "godev+gocd-ci-user@thoughtworks.com" && git config -l']
                   runIf = 'passed'
                   workingDir = "docker-gocd-server"
                 }
                 exec {
-                  commandLine = ['bash', '-c', 'rake --trace docker_push_stable']
+                  commandLine = ['bash', '-c', 'bundle exec rake --trace docker_push_stable']
                   runIf = 'passed'
                   workingDir = "docker-gocd-server"
                 }
                 exec {
-                  commandLine = ['bash', '-c', 'rake --trace publish']
+                  commandLine = ['bash', '-c', 'bundle exec rake --trace publish']
                   runIf = 'passed'
                   workingDir = "docker-gocd-server"
                 }
@@ -112,18 +116,22 @@ GoCD.script {
                   stage = 'dist'
                   destination = "docker-gocd-agent"
                 }
+                bash {
+                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  workingDir = 'codesigning'
+                }
                 exec {
                   commandLine = ['bash', '-c', 'git config --global user.email "godev+gocd-ci-user@thoughtworks.com" && git config -l']
                   runIf = 'passed'
                   workingDir = "docker-gocd-agent"
                 }
                 exec {
-                  commandLine = ['bash', '-c', 'rake --trace docker_push_stable']
+                  commandLine = ['bash', '-c', 'bundle exec rake --trace docker_push_stable']
                   runIf = 'passed'
                   workingDir = "docker-gocd-agent"
                 }
                 exec {
-                  commandLine = ['bash', '-c', 'rake --trace publish']
+                  commandLine = ['bash', '-c', 'bundle exec rake --trace publish']
                   runIf = 'passed'
                   workingDir = "docker-gocd-agent"
                 }

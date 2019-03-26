@@ -37,9 +37,6 @@ namespace :promote do
 
   desc "task to promote artifacts to update bucket"
   task :update_check_json, [:update_bucket_url] do |t, args|
-    # experimental_bucket_url = args[:experimental_bucket_url]
-    # raise "Please specify experimental bucket url" unless experimental_bucket_url
-
     update_bucket_url = args[:update_bucket_url]
     raise "Please specify update bucket url" unless update_bucket_url
 

@@ -1,0 +1,20 @@
+{
+  "name": "codesigning",
+  "version": "1.0.0",
+  "description": "Repository which contains the tasks needed for release nd post-release activities",
+  "repository": "git+https://github.com/gocd/codesigning.git",
+  "keywords": [
+    "Code-Signing"
+  ],
+  "author": "GoCD Contributors",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/gocd/codesigning/issues"
+  },
+  "homepage": "https://github.com/gocd/codesigning#readme",
+  "private": true,
+  "dependencies": {
+    "docker-hub-api": "^0.5.1",
+    "request": "^2.85.0"
+  }
+}

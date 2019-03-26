@@ -26,10 +26,10 @@ def fetchArtifactTask = { String osType ->
 
 def cleanTasks = {
   return [
-      new ExecTask({
-        commandLine = ['git', 'clean', '-dffx']
-        workingDir = 'codesigning'
-      })
+    new ExecTask({
+      commandLine = ['git', 'clean', '-dffx']
+      workingDir = 'codesigning'
+    })
   ]
 
 }
@@ -47,7 +47,7 @@ def publishArtifactTask = { String osType ->
   })
 }
 
-def getArtifact = {  String source1 ->
+def getArtifact = { String source1 ->
   return new FetchArtifactTask(false, {
     pipeline = 'code-sign'
     file = true
@@ -59,20 +59,20 @@ def getArtifact = {  String source1 ->
 }
 
 def secureEnvironmentVariableForGoCD = [
-    GOCD_GPG_PASSPHRASE  : 'AES:7lAutKoRKMuSnh3Sbg9DeQ==:8fhND9w/8AWw6dJhmWpTcCdKSsEcOzriQNiKFZD6XtN+sJvZ65NH/QFXRNiy192+SSTKsbhOrFmw+kAKt5+MH1Erd6H54zJjpSgvJUmsJaQ=',
-    AWS_ACCESS_KEY_ID    : 'AES:+yL/4p2Vh1oiVqkMirOOCw==:eoR5rhgQg3yKpKkDLLdliOlhyjpUts8yk9NfPqB8+eo=',
-    AWS_SECRET_ACCESS_KEY: 'AES:HOzGi5HE4ykrhl9LSNMfJg==:zE66pCSyjrQZjr+mzrYcyFrmIliz/T2wdNm0r+4ttYdUQCA73pT5sPEZ8HuKgxfU'
+  GOCD_GPG_PASSPHRASE  : 'AES:7lAutKoRKMuSnh3Sbg9DeQ==:8fhND9w/8AWw6dJhmWpTcCdKSsEcOzriQNiKFZD6XtN+sJvZ65NH/QFXRNiy192+SSTKsbhOrFmw+kAKt5+MH1Erd6H54zJjpSgvJUmsJaQ=',
+  AWS_ACCESS_KEY_ID    : 'AES:+yL/4p2Vh1oiVqkMirOOCw==:eoR5rhgQg3yKpKkDLLdliOlhyjpUts8yk9NfPqB8+eo=',
+  AWS_SECRET_ACCESS_KEY: 'AES:HOzGi5HE4ykrhl9LSNMfJg==:zE66pCSyjrQZjr+mzrYcyFrmIliz/T2wdNm0r+4ttYdUQCA73pT5sPEZ8HuKgxfU'
 ]
 
 def secureEnvironmentVariableForUpdateChannel = [
-    GOCD_GPG_PASSPHRASE  : 'AES:7lAutKoRKMuSnh3Sbg9DeQ==:8fhND9w/8AWw6dJhmWpTcCdKSsEcOzriQNiKFZD6XtN+sJvZ65NH/QFXRNiy192+SSTKsbhOrFmw+kAKt5+MH1Erd6H54zJjpSgvJUmsJaQ=',
-    AWS_ACCESS_KEY_ID    : 'AES:wBgBJL7+OUIbB6lL2oyzhw==:5v8jnATbtSknqet+hOKcWa1Hm8NvhA1wYjDpO91E3Sc=',
-    AWS_SECRET_ACCESS_KEY: 'AES:1eT6nKFMzFIPPUme1Eg95A==:oxzxhe77cedWi3ZN/uPJKpRWAfEmzzUwrF2gZHzohnrTTyJ6jsQNPtlUFuDWashS'
+  GOCD_GPG_PASSPHRASE  : 'AES:7lAutKoRKMuSnh3Sbg9DeQ==:8fhND9w/8AWw6dJhmWpTcCdKSsEcOzriQNiKFZD6XtN+sJvZ65NH/QFXRNiy192+SSTKsbhOrFmw+kAKt5+MH1Erd6H54zJjpSgvJUmsJaQ=',
+  AWS_ACCESS_KEY_ID    : 'AES:wBgBJL7+OUIbB6lL2oyzhw==:5v8jnATbtSknqet+hOKcWa1Hm8NvhA1wYjDpO91E3Sc=',
+  AWS_SECRET_ACCESS_KEY: 'AES:1eT6nKFMzFIPPUme1Eg95A==:oxzxhe77cedWi3ZN/uPJKpRWAfEmzzUwrF2gZHzohnrTTyJ6jsQNPtlUFuDWashS'
 ]
 
 def secureEnvironmentVariableForAddons = [
-    AWS_ACCESS_KEY_ID    : 'AES:JjvuR5shoE8QbY3oLpr/Fw==:KG7+G3mKB//jLALlMgH6qNUubBkvdnBlNjjrxfdaJ5M=',
-    AWS_SECRET_ACCESS_KEY: 'AES:eJrbqOkaHcpvvQCtGA/8wQ==:o3siVHlQIiS666ZOObVy1mH732+q7ZzmE4GQlm1bClnhXULIXXMz/NHwuwD9w+2C'
+  AWS_ACCESS_KEY_ID    : 'AES:JjvuR5shoE8QbY3oLpr/Fw==:KG7+G3mKB//jLALlMgH6qNUubBkvdnBlNjjrxfdaJ5M=',
+  AWS_SECRET_ACCESS_KEY: 'AES:eJrbqOkaHcpvvQCtGA/8wQ==:o3siVHlQIiS666ZOObVy1mH732+q7ZzmE4GQlm1bClnhXULIXXMz/NHwuwD9w+2C'
 ]
 
 GoCD.script {
@@ -86,9 +86,9 @@ GoCD.script {
     pipeline('code-sign') { thisPipeline ->
       group = 'go-cd'
       environmentVariables = [
-          'STABLE_DOWNLOAD_BUCKET'      : 'downloadgocdio-downloadgocdios3-192sau789jtkh',
-          'EXPERIMENTAL_DOWNLOAD_BUCKET': 'downloadgocdio-experimentaldownloadss3-dakr8wkhi2bo/experimental',
-          'UPDATE_CHECK_BUCKET'         : 'updategocdio-updategocdios3-1ujj23u8hpqdl'
+        'STABLE_DOWNLOAD_BUCKET'      : 'downloadgocdio-downloadgocdios3-192sau789jtkh',
+        'EXPERIMENTAL_DOWNLOAD_BUCKET': 'downloadgocdio-experimentaldownloadss3-dakr8wkhi2bo/experimental',
+        'UPDATE_CHECK_BUCKET'         : 'updategocdio-updategocdios3-1ujj23u8hpqdl'
       ]
 
       materials() {
@@ -180,8 +180,8 @@ GoCD.script {
                 addAll(cleanTasks())
                 add(fetchArtifactTask('win'))
                 add(fetchArtifactTask('meta'))
-                bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                exec {
+                  commandLine = ['bundle', 'install', '--jobs', '4', '--path', '.bundle', '--clean']
                   workingDir = 'codesigning'
                 }
                 exec {
@@ -267,15 +267,15 @@ GoCD.script {
       group = 'enterprise'
 
       environmentVariables = [
-          'GO_ENTERPRISE_DIR'         : '../go-enterprise',
-          'GO_SERVER_URL'             : 'https://build.gocd.org/go',
-          'BUILD_MAP_USER'            : 'gocd-ci-user',
-          'ADDONS_EXPERIMENTAL_BUCKET': 'mini-apps-extensionsexperimentaldownloadss3-hare386lt2d9/addons/experimental'
+        'GO_ENTERPRISE_DIR'         : '../go-enterprise',
+        'GO_SERVER_URL'             : 'https://build.gocd.org/go',
+        'BUILD_MAP_USER'            : 'gocd-ci-user',
+        'ADDONS_EXPERIMENTAL_BUCKET': 'mini-apps-extensionsexperimentaldownloadss3-hare386lt2d9/addons/experimental'
       ]
 
       secureEnvironmentVariables = [
-          'BUILD_MAP_PASSWORD': 'AES:cpJ+mtdIjY3h+5HzVn+oJA==:roxy5Nz2hHz3COmBNHySpqcM4JVgDHPCm45CoSCwSUIuGgq+PQcm3ajV0ZlSmPoX',
-          'CREDENTIALS'       : 'AES:4op4bMtqy6OohX5gw/KHPw==:yFDFPlzijIHPvT5B1/vHOyEWE4oMcwQ5Rc5zcCJ0QE0='
+        'BUILD_MAP_PASSWORD': 'AES:cpJ+mtdIjY3h+5HzVn+oJA==:roxy5Nz2hHz3COmBNHySpqcM4JVgDHPCm45CoSCwSUIuGgq+PQcm3ajV0ZlSmPoX',
+        'CREDENTIALS'       : 'AES:4op4bMtqy6OohX5gw/KHPw==:yFDFPlzijIHPvT5B1/vHOyEWE4oMcwQ5Rc5zcCJ0QE0='
       ]
 
       materials() {
@@ -366,11 +366,11 @@ GoCD.script {
       group = 'go-cd'
 
       environmentVariables = [
-          'STABLE_DOWNLOAD_BUCKET'      : 'downloadgocdio-downloadgocdios3-192sau789jtkh',
-          'EXPERIMENTAL_DOWNLOAD_BUCKET': 'downloadgocdio-experimentaldownloadss3-dakr8wkhi2bo/experimental',
-          'UPDATE_CHECK_BUCKET'         : 'updategocdio-updategocdios3-1ujj23u8hpqdl',
-          'ADDONS_EXPERIMENTAL_BUCKET'  : 'mini-apps-extensionsexperimentaldownloadss3-hare386lt2d9/addons/experimental',
-          'ADDONS_STABLE_BUCKET'        : 'mini-apps-extensionsdownloadss3-11t0jfofrxhyd/addons'
+        'STABLE_DOWNLOAD_BUCKET'      : 'downloadgocdio-downloadgocdios3-192sau789jtkh',
+        'EXPERIMENTAL_DOWNLOAD_BUCKET': 'downloadgocdio-experimentaldownloadss3-dakr8wkhi2bo/experimental',
+        'UPDATE_CHECK_BUCKET'         : 'updategocdio-updategocdios3-1ujj23u8hpqdl',
+        'ADDONS_EXPERIMENTAL_BUCKET'  : 'mini-apps-extensionsexperimentaldownloadss3-hare386lt2d9/addons/experimental',
+        'ADDONS_STABLE_BUCKET'        : 'mini-apps-extensionsdownloadss3-11t0jfofrxhyd/addons'
       ]
 
       materials() {

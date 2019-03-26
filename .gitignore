@@ -4,3 +4,4 @@ tmp/
 .idea/
 /gocd-groovy-dsl-config-plugin-*.jar
 /.bundle/
+/node_modules/

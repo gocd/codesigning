@@ -15,6 +15,7 @@
   "private": true,
   "dependencies": {
     "docker-hub-api": "^0.5.1",
-    "request": "^2.85.0"
+    "request": "^2.85.0",
+    "github-base": "^0.5.4"
   }
 }

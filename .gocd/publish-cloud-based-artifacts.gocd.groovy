@@ -1,6 +1,6 @@
 GoCD.script {
   pipelines {
-    pipeline('updated_publish-cloud-based-artifacts') {
+    pipeline('updated_publish_cloud_based_artifacts') {
       environmentVariables = [
         AWS_ACCESS_KEY_ID  : 'AKIAILVYUJN2SXOPFB3Q',
         GOCD_STABLE_RELEASE: 'true',

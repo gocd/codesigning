@@ -181,6 +181,10 @@ GoCD.script {
                 add(fetchArtifactTask('win'))
                 add(fetchArtifactTask('meta'))
                 exec {
+                  commandLine = ['sudo', 'gem', 'install', 'bundler']
+                  workingDir = "codesigning"
+                }
+                exec {
                   commandLine = ['bundle', 'install', '--jobs', '4', '--path', '.bundle', '--clean']
                   workingDir = 'codesigning'
                 }
@@ -196,6 +200,10 @@ GoCD.script {
                 addAll(cleanTasks())
                 add(fetchArtifactTask('osx'))
                 add(fetchArtifactTask('meta'))
+                exec {
+                  commandLine = ['sudo', 'gem', 'install', 'bundler']
+                  workingDir = "codesigning"
+                }
                 bash {
                   commandString = "bundle install --jobs 4 --path .bundle --clean"
                   workingDir = 'codesigning'

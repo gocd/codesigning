@@ -1,10 +1,10 @@
-require 'time'
-require 'aws-sdk'
-require 'rest-client'
-require 'json'
-require_relative '../lib/version_file_reader'
-
 task :update_cloud_images do
+  require 'time'
+  require 'aws-sdk'
+  require 'rest-client'
+  require 'json'
+  require_relative '../lib/version_file_reader'
+
   version           = VersionFileReader.go_version
   stable_bucket_url = env("STABLE_DOWNLOAD_BUCKET")
 

@@ -181,15 +181,7 @@ GoCD.script {
                 add(fetchArtifactTask('win'))
                 add(fetchArtifactTask('meta'))
                 exec {
-                  commandLine = ['sudo', 'gem', 'install', 'bundler']
-                  workingDir = "codesigning"
-                }
-                exec {
-                  commandLine = ['bundle', 'install', '--jobs', '4', '--path', '.bundle', '--clean']
-                  workingDir = 'codesigning'
-                }
-                exec {
-                  commandLine = ['bundle', 'exec', 'rake', '--trace', 'win:sign', 'win:upload[%EXPERIMENTAL_DOWNLOAD_BUCKET%]']
+                  commandLine = ['rake', '--trace', 'win:sign', 'win:upload[%EXPERIMENTAL_DOWNLOAD_BUCKET%]']
                   workingDir = 'codesigning'
                 }
               }
@@ -200,16 +192,8 @@ GoCD.script {
                 addAll(cleanTasks())
                 add(fetchArtifactTask('osx'))
                 add(fetchArtifactTask('meta'))
-                exec {
-                  commandLine = ['sudo', 'gem', 'install', 'bundler']
-                  workingDir = "codesigning"
-                }
                 bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
-                  workingDir = 'codesigning'
-                }
-                bash {
-                  commandString = 'bundle exec rake --trace osx:sign osx:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
+                  commandString = 'rake --trace osx:sign osx:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
                   workingDir = 'codesigning'
                 }
               }

@@ -1,5 +1,4 @@
-require 'rest-client'
-require 'json'
+
 
 task :cleanup_docker do
   dockerhub_username = env("DOCKERHUB_USERNAME")
@@ -7,6 +6,9 @@ task :cleanup_docker do
   org                = env("DOCKERHUB_ORG")
 
   raise "ORG can't be `gocd`! We can't delete the official stable images." if org.eql?("gocd")
+
+  require 'rest-client'
+  require 'json'
 
   login = RestClient.post('https://hub.docker.com/v2/users/login/', {username: dockerhub_username, password: dockerhub_password}.to_json, {:accept => 'application/json', :content_type => 'application/json'})
   token = JSON.parse(login)['token']

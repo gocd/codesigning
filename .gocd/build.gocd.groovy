@@ -150,11 +150,7 @@ GoCD.script {
                 add(fetchArtifactTask('deb'))
                 add(fetchArtifactTask('meta'))
                 bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
-                  workingDir = 'codesigning'
-                }
-                bash {
-                  commandString = 'bundle exec rake --trace deb:sign[${EXPERIMENTAL_DOWNLOAD_BUCKET}] deb:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}] apt:createrepo[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
+                  commandString = 'rake --trace deb:sign[${EXPERIMENTAL_DOWNLOAD_BUCKET}] deb:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}] apt:createrepo[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
                   workingDir = 'codesigning'
                 }
               }
@@ -447,11 +443,7 @@ GoCD.script {
                   destination = "codesigning/src"
                 }
                 bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
-                  workingDir = 'codesigning'
-                }
-                bash {
-                  commandString = 'bundle exec rake --trace apt:createrepo[${STABLE_DOWNLOAD_BUCKET}]'
+                  commandString = 'rake --trace apt:createrepo[${STABLE_DOWNLOAD_BUCKET}]'
                   workingDir = 'codesigning'
                 }
               }

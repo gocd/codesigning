@@ -71,7 +71,7 @@ GoCD.script {
           cleanWorkingDir = true
           fetchMaterials = true
           approval {
-            type = 'manual'
+            type = 'success'
           }
           jobs {
             job('publish-docker-server') {

@@ -358,7 +358,8 @@ GoCD.script {
         'EXPERIMENTAL_DOWNLOAD_BUCKET': 'downloadgocdio-experimentaldownloadss3-dakr8wkhi2bo/experimental',
         'UPDATE_CHECK_BUCKET'         : 'updategocdio-updategocdios3-1ujj23u8hpqdl',
         'ADDONS_EXPERIMENTAL_BUCKET'  : 'mini-apps-extensionsexperimentaldownloadss3-hare386lt2d9/addons/experimental',
-        'ADDONS_STABLE_BUCKET'        : 'mini-apps-extensionsdownloadss3-11t0jfofrxhyd/addons'
+        'ADDONS_STABLE_BUCKET'        : 'mini-apps-extensionsdownloadss3-11t0jfofrxhyd/addons',
+        'REALLY_REALLY_UPLOAD'        : ''
       ]
 
       materials() {
@@ -412,6 +413,9 @@ GoCD.script {
             job('promote-binaries') {
               elasticProfileId = 'ecs-gocd-dev-build'
               tasks {
+                bash {
+                  commandString = '-c if [ "${REALLY_REALLY_UPLOAD}" != \'YES_I_REALLY_REALLY_WANT_TO_UPLOAD\' ]; then echo "REALLY_REALLY_UPLOAD environment variable should be overridden while triggering."; exit 1; fi'
+                }
                 fetchDirectory {
                   pipeline = 'installers/code-sign'
                   stage = 'dist'

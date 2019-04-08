@@ -78,7 +78,7 @@ def secureEnvironmentVariableForAddons = [
 GoCD.script {
   environments {
     environment('internal') {
-      pipelines = ['code-sign', 'upload-addons', 'promote-stable-release']
+      pipelines = ['code-sign', 'upload-addons', 'PublishStableRelease']
     }
   }
 
@@ -350,7 +350,7 @@ GoCD.script {
       }
     }
 
-    pipeline('promote-stable-release') {
+    pipeline('PublishStableRelease') {
       group = 'go-cd'
 
       environmentVariables = [

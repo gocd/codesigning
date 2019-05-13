@@ -1,3 +1,8 @@
+def amisRegion = [
+  REGION                     : 'us-east-2',
+  EXTRA_AMI_REGION_TO_COPY_TO: 'us-east-1'
+]
+
 GoCD.script {
   pipelines {
     pipeline('publish-cloud-based-artifacts') {
@@ -146,10 +151,7 @@ GoCD.script {
             }
             job('publish-server-amis') {
               elasticProfileId = 'ecs-gocd-dev-build'
-              environmentVariables = [
-                REGION                     : 'us-east-2',
-                EXTRA_AMI_REGION_TO_COPY_TO: 'us-east-1'
-              ]
+              environmentVariables = amisRegion
               tasks {
                 exec {
                   commandLine = ['bash', '-c', 'wget -q https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip && unzip packer_0.12.3_linux_amd64.zip']
@@ -174,10 +176,7 @@ GoCD.script {
             }
             job('publish-demo-amis') {
               elasticProfileId = 'ecs-gocd-dev-build'
-              environmentVariables = [
-                REGION                     : 'us-east-2',
-                EXTRA_AMI_REGION_TO_COPY_TO: 'us-east-1'
-              ]
+              environmentVariables = amisRegion
               tasks {
                 exec {
                   commandLine = ['bash', '-c', 'wget -q https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip && unzip packer_0.12.3_linux_amd64.zip']
@@ -300,7 +299,7 @@ GoCD.script {
             }
             job('update_amis') {
               elasticProfileId = 'ecs-gocd-dev-build'
-              environmentVariables = [
+              environmentVariables = amisRegion + [
                 DOCKERHUB_ORG: 'gocd'
               ]
               secureEnvironmentVariables = [

@@ -25,7 +25,7 @@ task :upload_to_maven do
 
 
   %w(go-plugin-api go-plugin-config-repo).each do |artifact_name|
-    pom_content = File.read('deploy-pom.xml')
+    pom_content = File.read('./resources/deploy-pom.xml')
                       .gsub('${goReleaseVersion}', maven_release_version)
                       .gsub('${artifact}', "#{artifact_name}#{artifact_suffix}")
                       .gsub('${desc}', description_for(artifact_name))
@@ -34,7 +34,8 @@ task :upload_to_maven do
     File.open("#{artifact_name}/pom.xml", 'w') {|f| f.puts pom_content}
 
     cd "#{artifact_name}" do
-      sh("mvn -DautoReleaseToCentral=#{ENV['AUTO_RELEASE_TO_CENTRAL'] || 'false'} --batch-mode deploy")
+      sh("mvn --settings ../resources/settings.xml")
+      sh("mvn -DautoReleaseToCentral=#{ENV['AUTO_RELEASE_TO_CENTRAL'] || 'false'} --batch-mode -Dusername=${USERNAME} -Dpassword=${PASSWORD} deploy")
     end
 
   end

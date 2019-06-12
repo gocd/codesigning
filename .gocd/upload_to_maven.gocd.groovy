@@ -2,13 +2,13 @@ GoCD.script {
   pipelines {
     pipeline('upload-to-maven') {
       environmentVariables = [
-        GIT_USER           : 'gocd-ci-user',
+        GIT_USER: 'gocd-ci-user',
       ]
       group = 'internal'
       labelTemplate = '${COUNT}'
       lockBehavior = 'none'
       secureEnvironmentVariables = [
-        GIT_PASSWORD         : 'AES:VamvCdi7OX38zp33L7SJbw==:lm7xodTUI06gb39yj/qhX6zmxlkFuCjUx0+HHV5kn+ynJ2PNqfOMu1LmQio0u+Tj'
+        GIT_PASSWORD: 'AES:VamvCdi7OX38zp33L7SJbw==:lm7xodTUI06gb39yj/qhX6zmxlkFuCjUx0+HHV5kn+ynJ2PNqfOMu1LmQio0u+Tj'
       ]
       materials {
         git('CodeSigning') {
@@ -34,7 +34,11 @@ GoCD.script {
           }
           environmentVariables = [
             'AUTO_RELEASE_TO_CENTRAL': 'true',
-            'EXPERIMENTAL_RELEASE'   : 'false'
+            'EXPERIMENTAL_RELEASE'   : 'false',
+            'USERNAME'               : 'maven-username'
+          ]
+          secureEnvironmentVariables = [
+            'PASSWORD': 'encrypted-password'
           ]
           jobs {
             job('upload-to-maven') {

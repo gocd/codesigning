@@ -291,6 +291,57 @@ GoCD.script {
             }
           }
         }
+
+        stage('upload-to-maven-exp') {
+          cleanWorkingDir = true
+          approval {
+            type = 'manual'
+          }
+          environmentVariables = [
+            'AUTO_RELEASE_TO_CENTRAL': 'true',
+            'EXPERIMENTAL_RELEASE'   : 'true'
+          ]
+          jobs {
+            job('upload-maven') {
+              elasticProfileId = 'ecs-gocd-dev-build'
+              tasks {
+                fetchArtifact {
+                  file = true
+                  job = 'dist'
+                  pipeline = 'installers'
+                  runIf = 'passed'
+                  source = 'dist/meta/version.json'
+                  stage = 'dist'
+                  destination = "codesigning"
+                }
+                fetchArtifact {
+                  job = 'dist'
+                  pipeline = 'installers'
+                  runIf = 'passed'
+                  source = 'go-plugin-api'
+                  stage = 'dist'
+                  destination = "codesigning"
+                }
+                fetchArtifact {
+                  job = 'dist'
+                  pipeline = 'installers'
+                  runIf = 'passed'
+                  source = 'go-plugin-config-repo'
+                  stage = 'dist'
+                  destination = "codesigning"
+                }
+                bash {
+                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  workingDir = 'codesigning'
+                }
+                bash {
+                  commandString = "bundle exec rake upload_to_maven"
+                  workingDir = 'codesigning'
+                }
+              }
+            }
+          }
+        }
       }
     }
 

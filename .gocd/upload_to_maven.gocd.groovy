@@ -32,6 +32,10 @@ GoCD.script {
           approval {
             type = 'success'
           }
+          environmentVariables = [
+            'AUTO_RELEASE_TO_CENTRAL': 'true',
+            'EXPERIMENTAL_RELEASE'   : 'false'
+          ]
           jobs {
             job('upload-to-maven') {
               elasticProfileId = 'ecs-gocd-dev-build'

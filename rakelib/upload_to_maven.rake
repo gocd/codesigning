@@ -1,15 +1,14 @@
 desc 'renaming the relevant files with relevant suffix'
-task :upload_to_maven, [:experimental] do |t, args|
+task :upload_to_maven do
   require 'json'
   require_relative '../lib/version_file_reader'
 
   go_full_version = VersionFileReader.go_full_version
   go_version      = VersionFileReader.go_version
 
-
-  isExperimental        = args[:experimental]
-  maven_release_version = isExperimental ? go_full_version : go_version
-  artifact_suffix       = isExperimental ? "-exp" : ""
+  is_experimental       = ENV['EXPERIMENTAL_RELEASE'] === "true"
+  maven_release_version = is_experimental ? go_full_version : go_version
+  artifact_suffix       = is_experimental ? "-experimental" : ""
 
   {
       "go-plugin-api/go-plugin-api-#{go_full_version}.jar"                         => "go-plugin-api/go-plugin-api#{artifact_suffix}-#{maven_release_version}.jar",
@@ -35,7 +34,7 @@ task :upload_to_maven, [:experimental] do |t, args|
     File.open("#{artifact_name}/pom.xml", 'w') {|f| f.puts pom_content}
 
     cd "#{artifact_name}" do
-      sh("mvn -DautoReleaseToCentral=true --batch-mode deploy")
+      sh("mvn -DautoReleaseToCentral=#{ENV['AUTO_RELEASE_TO_CENTRAL'] || 'false'} --batch-mode deploy")
     end
 
   end

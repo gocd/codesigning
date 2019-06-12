@@ -300,10 +300,10 @@ GoCD.script {
           environmentVariables = [
             'AUTO_RELEASE_TO_CENTRAL': 'true',
             'EXPERIMENTAL_RELEASE'   : 'true',
-            'USERNAME'               : 'maven-username'
+            'MAVEN_NEXUS_USERNAME'               : 'maven-username'
           ]
           secureEnvironmentVariables = [
-            'PASSWORD': 'encrypted-password'
+            'MAVEN_NEXUS_PASSWORD': 'encrypted-password'
           ]
           jobs {
             job('upload-maven') {

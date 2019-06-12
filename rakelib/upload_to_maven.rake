@@ -35,7 +35,7 @@ task :upload_to_maven do
 
     cd "#{artifact_name}" do
       sh("mvn --settings ../resources/settings.xml")
-      sh("mvn -DautoReleaseToCentral=#{ENV['AUTO_RELEASE_TO_CENTRAL'] || 'false'} --batch-mode -Dusername=${USERNAME} -Dpassword=${PASSWORD} deploy")
+      sh("mvn -DautoReleaseToCentral=#{ENV['AUTO_RELEASE_TO_CENTRAL'] || 'false'} --batch-mode -Dusername=${MAVEN_NEXUS_USERNAME} -Dpassword=${MAVEN_NEXUS_PASSWORD} deploy")
     end
 
   end

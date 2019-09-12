@@ -69,8 +69,9 @@ GoCD.script {
           jobs {
             job('publish-all-docker-images') {
               elasticProfileId = 'ecs-gocd-dev-build-dind'
-              secureEnvironmentVariables = [
-                DOCKERHUB_TOKEN: 'AES:/kyjH+p7WTo/IW1jkM6BvA==:3DwXltcCbvX8aEyZbtUTgnPnRdqt6M3j2IyCgFL+PqEQa7btD0Sxj25eLZxSXyuK0xxyI5MUSWHXVQ7cCbZgmA=='
+              environmentVariables = [
+                DOCKERHUB_USERNAME: '{{SECRET:[build-pipelines][DOCKERHUB_USER]}}',
+                DOCKERHUB_PASSWORD: '{{SECRET:[build-pipelines][DOCKERHUB_PASS]}}'
               ]
               tasks {
                 fetchArtifact {
@@ -256,7 +257,9 @@ GoCD.script {
           }
           environmentVariables = [
             'EXPERIMENTAL_DOWNLOAD_BUCKET': 'downloadgocdio-experimentaldownloadss3-dakr8wkhi2bo/experimental',
-            'STABLE_DOWNLOAD_BUCKET'      : 'downloadgocdio-downloadgocdios3-192sau789jtkh'
+            'STABLE_DOWNLOAD_BUCKET'      : 'downloadgocdio-downloadgocdios3-192sau789jtkh',
+            'DOCKERHUB_USERNAME'          : '{{SECRET:[build-pipelines][DOCKERHUB_USER]}}',
+            'DOCKERHUB_PASSWORD'          : '{{SECRET:[build-pipelines][DOCKERHUB_PASS]}}'
           ]
           jobs {
             job('empty_exp_bucket') {
@@ -277,10 +280,6 @@ GoCD.script {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = amisRegion + [
                 DOCKERHUB_ORG: 'gocd'
-              ]
-              secureEnvironmentVariables = [
-                DOCKERHUB_USERNAME   : 'AES:Pp9depK+IrJQRvZeI3bCMQ==:eOKizyYfEBaLBHZjx2xFJxPWaD0zomriRqKAbaKsMWg=',
-                DOCKERHUB_PASSWORD   : 'AES:BT1Os1J76jvX5yp6ziircw==:abH3RRgXyJVj6ai0k7idz8Do9V2v9s+3NlCNcZ1bF3w='
               ]
               tasks {
                 fetchArtifact {
@@ -320,10 +319,6 @@ GoCD.script {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = [
                 DOCKERHUB_ORG: 'gocdexperimental'
-              ]
-              secureEnvironmentVariables = [
-                DOCKERHUB_USERNAME: 'AES:Pp9depK+IrJQRvZeI3bCMQ==:eOKizyYfEBaLBHZjx2xFJxPWaD0zomriRqKAbaKsMWg=',
-                DOCKERHUB_PASSWORD: 'AES:BT1Os1J76jvX5yp6ziircw==:abH3RRgXyJVj6ai0k7idz8Do9V2v9s+3NlCNcZ1bF3w='
               ]
               tasks {
                 fetchArtifact {

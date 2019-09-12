@@ -24,11 +24,18 @@ namespace :docker do
   end
 
   task :dockerhub_login do
-    token = ENV["DOCKERHUB_TOKEN"] || (raise "Environment variable DOCKERHUB_TOKEN is not specified")
+    dockerhub_username = env("DOCKERHUB_USERNAME")
+    dockerhub_password = env("DOCKERHUB_PASSWORD")
+
+    creds = {
+        :ServerURL => "https://index.docker.io/v1",
+        :Username  => dockerhub_username,
+        :Secret    => dockerhub_password
+    }
 
     mkdir_p "#{Dir.home}/.docker"
     open("#{Dir.home}/.docker/config.json", "w") do |f|
-      f.write({:auths => {"https://index.docker.io/v1/" => {:auth => token}}}.to_json)
+      f.write(creds.to_json)
     end
 
   end
@@ -62,7 +69,7 @@ namespace :docker do
   desc 'Publish docker images to hub'
   task :publish_docker_images => :dockerhub_login do
 
-    metadata        = JSON.parse(File.read("version.json"))
+    metadata   = JSON.parse(File.read("version.json"))
     go_version = metadata['go_version']
 
     %w[agent server].each do |type|
@@ -85,6 +92,14 @@ namespace :docker do
         }
       }
     end
+  end
+
+  private
+
+  def env(key)
+    value = ENV[key].to_s.strip
+    raise "Please specify #{key}" unless value
+    value
   end
 
 end

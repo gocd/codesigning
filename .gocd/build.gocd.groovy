@@ -201,10 +201,6 @@ GoCD.script {
                 DOCKERHUB_PASSWORD: '{{SECRET:[build-pipelines][DOCKERHUB_PASS]}}'
               ]
 
-              //Not sure how this is generated will fix it in sometime
-              secureEnvironmentVariables = [
-                DOCKERHUB_TOKEN: 'AES:/kyjH+p7WTo/IW1jkM6BvA==:3DwXltcCbvX8aEyZbtUTgnPnRdqt6M3j2IyCgFL+PqEQa7btD0Sxj25eLZxSXyuK0xxyI5MUSWHXVQ7cCbZgmA=='
-              ]
               tasks {
                 fetchArtifact {
                   job = 'docker-server'

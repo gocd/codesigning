@@ -28,9 +28,10 @@ namespace :docker do
     dockerhub_password = env("DOCKERHUB_PASSWORD")
 
     creds = {
-        :ServerURL => "https://index.docker.io/v1",
-        :Username  => dockerhub_username,
-        :Secret    => dockerhub_password
+        "https://index.docker.io/v1" => {
+            :username => dockerhub_username,
+            :password => dockerhub_password
+        }
     }
 
     mkdir_p "#{Dir.home}/.docker"

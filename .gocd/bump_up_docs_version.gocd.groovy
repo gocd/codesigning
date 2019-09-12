@@ -1,3 +1,4 @@
+
 GoCD.script {
   pipelines {
     pipeline('bump_up_docs_version') {
@@ -8,9 +9,7 @@ GoCD.script {
       group = 'internal'
       labelTemplate = '${COUNT}'
       lockBehavior = 'none'
-      secureEnvironmentVariables = [
-        GITHUB_TOKEN: 'AES:BpIf28a8CFYsdHCtQ1W2ag==:669s8sbasqeh07SxM+n1rxxuWFcHqRkcUmiNchOSeHJg88br3rEeHvFAK9Jt5nAG',
-      ]
+      environmentVariables = [GITHUB_TOKEN: "{{SECRET:[build-pipelines][GOCD_CI_USER_RELEASE_TOKEN]}}".toString()]
       materials {
         git('ReleaseActivityScripts') {
           branch = 'master'

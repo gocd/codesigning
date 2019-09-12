@@ -1,4 +1,5 @@
 require 'json'
+require 'base64'
 
 namespace :docker do
 
@@ -30,8 +31,7 @@ namespace :docker do
     creds = {
         :auths => {
             "https://index.docker.io/v1" => {
-                :username => dockerhub_username,
-                :password => dockerhub_password
+                :auth => Base64.encode64("#{dockerhub_username}:#{dockerhub_password}")
             }
         }
     }

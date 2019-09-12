@@ -28,13 +28,9 @@ namespace :docker do
     dockerhub_username = env("DOCKERHUB_USERNAME")
     dockerhub_password = env("DOCKERHUB_PASSWORD")
 
-    creds = {
-        :auths => {
-            "https://index.docker.io/v1" => {
-                :auth => Base64.encode64("#{dockerhub_username}:#{dockerhub_password}")
-            }
-        }
-    }
+    base_encode = Base64.strict_encode64("#{dockerhub_username}:#{dockerhub_password}")
+
+    creds = {:auths => {"https://index.docker.io/v1/" => {:auth => base_encode}}}
 
     mkdir_p "#{Dir.home}/.docker"
     open("#{Dir.home}/.docker/config.json", "w") do |f|
@@ -101,7 +97,9 @@ namespace :docker do
 
   def env(key)
     value = ENV[key].to_s.strip
-    raise "Please specify #{key}" unless value
+    if !value || value.length == 0
+      raise "Please specify #{key}"
+    end
     value
   end
 

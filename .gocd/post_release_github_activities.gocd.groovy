@@ -28,9 +28,7 @@ GoCD.script {
           jobs {
             job('draft-release') {
               elasticProfileId = 'ecs-gocd-dev-build'
-              secureEnvironmentVariables = [
-                GITHUB_TOKEN: 'AES:Q4IFE6x/f+VCqxpR01+daA==:/fXVmWSK2TBd6cP4I9diey57vcDVVCgHYmh74CjksPprlknmJ0G9OEfdPbjy6uj8',
-              ]
+              environmentVariables = [GITHUB_TOKEN: "{{SECRET:[build-pipelines][GOCD_CI_USER_RELEASE_TOKEN]}}"]
               timeout = 0
               tasks {
                 fetchArtifact {

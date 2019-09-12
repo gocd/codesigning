@@ -3,23 +3,25 @@ def amisRegion = [
   EXTRA_AMI_REGION_TO_COPY_TO: 'us-east-1'
 ]
 
+static String secretParam(String param) {
+  return "{{SECRET:[build-pipelines][$param]}}".toString()
+}
+
 GoCD.script {
   pipelines {
     pipeline('publish-cloud-based-artifacts') {
       environmentVariables = [
-        AWS_ACCESS_KEY_ID  : 'AKIAVL5CITUNP4CUFG4E',
-        GOCD_STABLE_RELEASE: 'true',
-        GIT_USER           : 'gocd-ci-user',
-        version            : '',
-        revision           : ''
+        AWS_ACCESS_KEY_ID    : 'AKIAVL5CITUNP4CUFG4E',
+        GOCD_STABLE_RELEASE  : 'true',
+        GIT_USER             : 'gocd-ci-user',
+        version              : '',
+        revision             : '',
+        GIT_PASSWORD         : secretParam("GOCD_CI_USER_RELEASE_TOKEN"),
+        AWS_SECRET_ACCESS_KEY: secretParam("AWS_SECRET_KEY_FOR_PUBLISH_RELEASE")
       ]
       group = 'internal'
       labelTemplate = '${COUNT}'
       lockBehavior = 'none'
-      secureEnvironmentVariables = [
-        GIT_PASSWORD         : 'AES:VamvCdi7OX38zp33L7SJbw==:lm7xodTUI06gb39yj/qhX6zmxlkFuCjUx0+HHV5kn+ynJ2PNqfOMu1LmQio0u+Tj',
-        AWS_SECRET_ACCESS_KEY: 'AES:JN1gGuTX+e27jS5P2F4F1A==:ZZVNpWP2N3h4kKSf39Nb0xgAFuyMKqp4Escu6W0+Q3lC2RHFv8IUMr6EpzyYZmlW'
-      ]
       materials {
         git('GocdCloud') {
           branch = 'master'
@@ -70,8 +72,8 @@ GoCD.script {
             job('publish-all-docker-images') {
               elasticProfileId = 'ecs-gocd-dev-build-dind'
               environmentVariables = [
-                DOCKERHUB_USERNAME: '{{SECRET:[build-pipelines][DOCKERHUB_USER]}}',
-                DOCKERHUB_PASSWORD: '{{SECRET:[build-pipelines][DOCKERHUB_PASS]}}'
+                DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USER"),
+                DOCKERHUB_PASSWORD: secretParam("DOCKERHUB_PASS")
               ]
               tasks {
                 fetchArtifact {
@@ -180,10 +182,8 @@ GoCD.script {
               elasticProfileId = 'window-dev-build'
               environmentVariables = [
                 version : '',
-                revision: ''
-              ]
-              secureEnvironmentVariables = [
-                apiKey: 'AES:eYt+yWlVJRsuVSK2yWlF7A==:yoASfHRZnEvfyFH/YfVccrvq749J2lZxbgGraHZGXsGqZXg5+gUCHgdmUoTk02+O'
+                revision: '',
+                apiKey  : secretParam("CHOCO_API_KEY")
               ]
               tasks {
                 fetchArtifact {
@@ -215,10 +215,8 @@ GoCD.script {
               elasticProfileId = 'window-dev-build'
               environmentVariables = [
                 version : '',
-                revision: ''
-              ]
-              secureEnvironmentVariables = [
-                apiKey: 'AES:BMTjlSq9a2D01RjVhg0iFQ==:MauWWNlRnP9ByoojvFMAKCimEYWNGdGoip5to7iHF+Em2xrh4SyItmufeGUpq9vU'
+                revision: '',
+                apiKey  : secretParam("CHOCO_API_KEY")
               ]
               tasks {
                 fetchArtifact {
@@ -258,15 +256,14 @@ GoCD.script {
           environmentVariables = [
             'EXPERIMENTAL_DOWNLOAD_BUCKET': 'downloadgocdio-experimentaldownloadss3-dakr8wkhi2bo/experimental',
             'STABLE_DOWNLOAD_BUCKET'      : 'downloadgocdio-downloadgocdios3-192sau789jtkh',
-            'DOCKERHUB_USERNAME'          : '{{SECRET:[build-pipelines][DOCKERHUB_USER]}}',
-            'DOCKERHUB_PASSWORD'          : '{{SECRET:[build-pipelines][DOCKERHUB_PASS]}}'
+            'DOCKERHUB_TOKEN'             : secretParam("DOCKERHUB_TOKEN")
           ]
           jobs {
             job('empty_exp_bucket') {
               elasticProfileId = 'ecs-gocd-dev-build'
-              secureEnvironmentVariables = [
-                AWS_ACCESS_KEY_ID    : 'AES:+yL/4p2Vh1oiVqkMirOOCw==:eoR5rhgQg3yKpKkDLLdliOlhyjpUts8yk9NfPqB8+eo=',
-                AWS_SECRET_ACCESS_KEY: 'AES:HOzGi5HE4ykrhl9LSNMfJg==:zE66pCSyjrQZjr+mzrYcyFrmIliz/T2wdNm0r+4ttYdUQCA73pT5sPEZ8HuKgxfU'
+              environmentVariables = [
+                AWS_ACCESS_KEY_ID    : secretParam("AWS_ACCESS_KEY_ID_FOR_EXP_RELEASE"),
+                AWS_SECRET_ACCESS_KEY: secretParam("AWS_SECRET_KEY_FOR_EXP_RELEASE")
               ]
               tasks {
                 exec {
@@ -303,10 +300,7 @@ GoCD.script {
               environmentVariables = [
                 DOCKERHUB_ORG: 'gocdexperimental'
               ]
-              secureEnvironmentVariables = [
-                DOCKERHUB_USERNAME: 'AES:Pp9depK+IrJQRvZeI3bCMQ==:eOKizyYfEBaLBHZjx2xFJxPWaD0zomriRqKAbaKsMWg=',
-                DOCKERHUB_PASSWORD: 'AES:BT1Os1J76jvX5yp6ziircw==:abH3RRgXyJVj6ai0k7idz8Do9V2v9s+3NlCNcZ1bF3w='
-              ]
+              environmentVariables = [DOCKERHUB_TOKEN: secretParam("DOCKERHUB_TOKEN")]
               tasks {
                 exec {
                   commandLine = ['bash', '-c', 'bundle install && bundle exec rake cleanup_docker']

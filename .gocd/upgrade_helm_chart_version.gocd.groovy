@@ -30,9 +30,7 @@ GoCD.script {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = [
                 GIT_USERNAME: 'gocd-ci-user',
-              ]
-              secureEnvironmentVariables = [
-                GIT_PASSWORD: 'AES:7NcdUscgZG/MnwoKPJYeIw==:z2S32FA5xtXtcPoMe2cZK+1id6ejS5FI35VjaH6czxrZZ/UPQW6okuuYz2oqxLjN',
+                GIT_PASSWORD: '{{SECRET:[build-pipelines][GOCD_CI_USER_RELEASE_TOKEN]',
               ]
               tasks {
                 fetchArtifact {

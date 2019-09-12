@@ -58,21 +58,25 @@ def getArtifact = { String source1 ->
   })
 }
 
-def secureEnvironmentVariableForGoCD = [
-  GOCD_GPG_PASSPHRASE  : 'AES:7lAutKoRKMuSnh3Sbg9DeQ==:8fhND9w/8AWw6dJhmWpTcCdKSsEcOzriQNiKFZD6XtN+sJvZ65NH/QFXRNiy192+SSTKsbhOrFmw+kAKt5+MH1Erd6H54zJjpSgvJUmsJaQ=',
-  AWS_ACCESS_KEY_ID    : 'AES:+yL/4p2Vh1oiVqkMirOOCw==:eoR5rhgQg3yKpKkDLLdliOlhyjpUts8yk9NfPqB8+eo=',
-  AWS_SECRET_ACCESS_KEY: 'AES:HOzGi5HE4ykrhl9LSNMfJg==:zE66pCSyjrQZjr+mzrYcyFrmIliz/T2wdNm0r+4ttYdUQCA73pT5sPEZ8HuKgxfU'
+static String secretParam(String param) {
+  return "{{SECRET:[build-pipelines][$param]}}".toString()
+}
+
+def environmentVariableForGoCD = [
+  GOCD_GPG_PASSPHRASE  : secretParam("GOCD_GPG_PASSPHRASE"),
+  AWS_ACCESS_KEY_ID    : secretParam("AWS_ACCESS_KEY_ID_FOR_GOCD"),
+  AWS_SECRET_ACCESS_KEY: secretParam("AWS_SECRET_ACCESS_KEY_FOR_GOCD")
 ]
 
-def secureEnvironmentVariableForUpdateChannel = [
-  GOCD_GPG_PASSPHRASE  : 'AES:7lAutKoRKMuSnh3Sbg9DeQ==:8fhND9w/8AWw6dJhmWpTcCdKSsEcOzriQNiKFZD6XtN+sJvZ65NH/QFXRNiy192+SSTKsbhOrFmw+kAKt5+MH1Erd6H54zJjpSgvJUmsJaQ=',
-  AWS_ACCESS_KEY_ID    : 'AES:wBgBJL7+OUIbB6lL2oyzhw==:5v8jnATbtSknqet+hOKcWa1Hm8NvhA1wYjDpO91E3Sc=',
-  AWS_SECRET_ACCESS_KEY: 'AES:1eT6nKFMzFIPPUme1Eg95A==:oxzxhe77cedWi3ZN/uPJKpRWAfEmzzUwrF2gZHzohnrTTyJ6jsQNPtlUFuDWashS'
+def environmentVariableForUpdateChannel = [
+  GOCD_GPG_PASSPHRASE  : secretParam("GOCD_GPG_PASSPHRASE"),
+  AWS_ACCESS_KEY_ID    : secretParam("AWS_ACCESS_KEY_ID_FOR_UPDATE_CHANNEL"),
+  AWS_SECRET_ACCESS_KEY: secretParam("AWS_SECRET_ACCESS_KEY_FOR_UPDATE_CHANNEL")
 ]
 
-def secureEnvironmentVariableForAddons = [
-  AWS_ACCESS_KEY_ID    : 'AES:JjvuR5shoE8QbY3oLpr/Fw==:KG7+G3mKB//jLALlMgH6qNUubBkvdnBlNjjrxfdaJ5M=',
-  AWS_SECRET_ACCESS_KEY: 'AES:eJrbqOkaHcpvvQCtGA/8wQ==:o3siVHlQIiS666ZOObVy1mH732+q7ZzmE4GQlm1bClnhXULIXXMz/NHwuwD9w+2C'
+def environmentVariableForAddons = [
+  AWS_ACCESS_KEY_ID    : secretParam("AWS_ACCESS_KEY_ID_FOR_ADDONS"),
+  AWS_SECRET_ACCESS_KEY: secretParam("AWS_SECRET_ACCESS_KEY_FOR_ADDONS")
 ]
 
 GoCD.script {
@@ -100,7 +104,7 @@ GoCD.script {
         svn('signing-keys') {
           url = "https://github.com/gocd-private/signing-keys/trunk"
           username = "gocd-ci-user"
-          encryptedPassword = "AES:taOvOCaXsoVwzIi+xIGLdA==:GSfhZ6KKt6MXKp/wdYYoyBQKKzbTiyDa+35kDgkEIOF75s9lzerGInbqbUM7nUKc"
+          encryptedPassword = secretParam("GOCD_CI_USER_TOKEN_WITH_REPO_ACCESS")
           destination = "signing-keys"
         }
         dependency('installers') {
@@ -121,7 +125,7 @@ GoCD.script {
         stage('sign-and-upload') {
           cleanWorkingDir = true
           //credentials for gocd experimental builds
-          secureEnvironmentVariables = secureEnvironmentVariableForGoCD
+          environmentVariables = environmentVariableForGoCD
 
           jobs {
             job('rpm') {
@@ -196,10 +200,7 @@ GoCD.script {
             }
             job('upload-docker-image') {
               elasticProfileId = 'ecs-gocd-dev-build-dind'
-              environmentVariables = [
-                DOCKERHUB_USERNAME: '{{SECRET:[build-pipelines][DOCKERHUB_USER]}}',
-                DOCKERHUB_PASSWORD: '{{SECRET:[build-pipelines][DOCKERHUB_PASS]}}'
-              ]
+              environmentVariables = [DOCKERHUB_TOKEN: secretParam("DOCKERHUB_TOKEN")]
 
               tasks {
                 fetchArtifact {
@@ -242,7 +243,7 @@ GoCD.script {
 
         stage('aggregate-jsons') {
           //credentials for gocd experimental builds
-          secureEnvironmentVariables = secureEnvironmentVariableForGoCD
+          environmentVariables = environmentVariableForGoCD
           jobs {
             job('aggregate-jsons') {
               elasticProfileId = 'ecs-gocd-dev-build'
@@ -270,7 +271,7 @@ GoCD.script {
 
         stage('metadata') {
           //credentials for gocd update channel
-          secureEnvironmentVariables = secureEnvironmentVariableForUpdateChannel
+          environmentVariables = environmentVariableForUpdateChannel
 
           jobs {
             job('generate') {
@@ -300,11 +301,9 @@ GoCD.script {
           environmentVariables = [
             'AUTO_RELEASE_TO_CENTRAL': 'true',
             'EXPERIMENTAL_RELEASE'   : 'true',
-            'MAVEN_NEXUS_USERNAME'   : 'arvindsv'
-          ]
-          secureEnvironmentVariables = [
-            GOCD_GPG_PASSPHRASE   : 'AES:7lAutKoRKMuSnh3Sbg9DeQ==:8fhND9w/8AWw6dJhmWpTcCdKSsEcOzriQNiKFZD6XtN+sJvZ65NH/QFXRNiy192+SSTKsbhOrFmw+kAKt5+MH1Erd6H54zJjpSgvJUmsJaQ=',
-            'MAVEN_NEXUS_PASSWORD': 'AES:U0+58CAsIkycH+6DUL+Z6w==:EoTd+MQsXP8iL64+eDUi226NbEOGM3N6RfYxZeXH6C30X70xcKKuaEuFVLATe92Ht9RDNrMhXbv2lAt/iEoEbA=='
+            'MAVEN_NEXUS_USERNAME'   : 'arvindsv',
+            'GOCD_GPG_PASSPHRASE'    : secretParam("GOCD_GPG_PASSPHRASE"),
+            'MAVEN_NEXUS_PASSWORD'   : secretParam("ARVINDSV_NEXUS_PASSWORD")
           ]
           jobs {
             job('upload-maven') {
@@ -357,12 +356,9 @@ GoCD.script {
         'GO_ENTERPRISE_DIR'         : '../go-enterprise',
         'GO_SERVER_URL'             : 'https://build.gocd.org/go',
         'BUILD_MAP_USER'            : 'gocd-ci-user',
-        'ADDONS_EXPERIMENTAL_BUCKET': 'mini-apps-extensionsexperimentaldownloadss3-hare386lt2d9/addons/experimental'
-      ]
-
-      secureEnvironmentVariables = [
-        'BUILD_MAP_PASSWORD': 'AES:cpJ+mtdIjY3h+5HzVn+oJA==:roxy5Nz2hHz3COmBNHySpqcM4JVgDHPCm45CoSCwSUIuGgq+PQcm3ajV0ZlSmPoX',
-        'CREDENTIALS'       : 'AES:4op4bMtqy6OohX5gw/KHPw==:yFDFPlzijIHPvT5B1/vHOyEWE4oMcwQ5Rc5zcCJ0QE0='
+        'ADDONS_EXPERIMENTAL_BUCKET': 'mini-apps-extensionsexperimentaldownloadss3-hare386lt2d9/addons/experimental',
+        'BUILD_MAP_PASSWORD'        : secretParam("GOCD_CI_USER_PR_STATUS_TOKEN"),
+        'CREDENTIALS'               : "${secretParam('ENTERPRISE_USERNAME')}:${secretParam('ENTERPRISE_PASSWORD')}"
       ]
 
       materials() {
@@ -372,13 +368,17 @@ GoCD.script {
           blacklist = ["**/*.*", "**/*"]
         }
         git('enterprise') {
-          url = 'https://gocd:cz44DJpf2muap@git.gocd.io/git/gocd-private/enterprise'
+          url = 'https://git.gocd.io/git/gocd-private/enterprise'
+          username = "gocd"
+          password = secretParam("GOCD_USER_PASSWORD")
           destination = "go-enterprise"
           shallowClone = "true"
           blacklist = ["**/*.*", "**/*"]
         }
         git('gocd_addons_compatibility') {
-          url = 'https://gocd:cz44DJpf2muap@git.gocd.io/git/gocd-private/gocd_addons_compatibility'
+          url = 'https://git.gocd.io/git/gocd-private/gocd_addons_compatibility'
+          username = "gocd"
+          password = secretParam("GOCD_USER_PASSWORD")
           destination = "gocd_addons_compatibility"
           shallowClone = "true"
           blacklist = ["**/*.*", "**/*"]
@@ -404,7 +404,7 @@ GoCD.script {
       stages {
         stage('upload-addons') {
           //credentials for gocd addons experimental builds
-          secureEnvironmentVariables = secureEnvironmentVariableForAddons
+          environmentVariables = environmentVariableForAddons
 
           jobs {
             job('upload') {
@@ -469,7 +469,9 @@ GoCD.script {
           blacklist = ["**/*.*", "**/*"]
         }
         git('enterprise') {
-          url = 'https://gocd:cz44DJpf2muap@git.gocd.io/git/gocd-private/enterprise'
+          url = 'https://git.gocd.io/git/gocd-private/enterprise'
+          username = "gocd"
+          password = secretParam("GOCD_USER_PASSWORD")
           destination = "go-enterprise"
           shallowClone = "true"
           blacklist = ["**/*.*", "**/*"]
@@ -477,7 +479,7 @@ GoCD.script {
         svn('signing-keys') {
           url = "https://github.com/gocd-private/signing-keys/trunk"
           username = "gocd-ci-user"
-          encryptedPassword = "AES:taOvOCaXsoVwzIi+xIGLdA==:GSfhZ6KKt6MXKp/wdYYoyBQKKzbTiyDa+35kDgkEIOF75s9lzerGInbqbUM7nUKc"
+          password = secretParam("GOCD_CI_USER_TOKEN_WITH_REPO_ACCESS")
           destination = "signing-keys"
         }
         dependency('code-sign') {
@@ -508,7 +510,7 @@ GoCD.script {
             type = 'manual'
           }
           //credentials for gocd experimental/stable builds
-          secureEnvironmentVariables = secureEnvironmentVariableForGoCD
+          environmentVariables = environmentVariableForGoCD
           jobs {
             job('promote-binaries') {
               elasticProfileId = 'ecs-gocd-dev-build'
@@ -538,7 +540,7 @@ GoCD.script {
 
         stage('create-repositories') {
           //credentials for gocd stable builds
-          secureEnvironmentVariables = secureEnvironmentVariableForGoCD
+          environmentVariables = environmentVariableForGoCD
           jobs {
             job('apt') {
               elasticProfileId = 'ubuntu-16.04'
@@ -582,7 +584,7 @@ GoCD.script {
 
         stage('promote-addons') {
           //credentials for gocd addons experimental/stable builds
-          secureEnvironmentVariables = secureEnvironmentVariableForAddons
+          environmentVariables = environmentVariableForAddons
           jobs {
             job('promote-addons') {
               elasticProfileId = 'ecs-gocd-dev-build'
@@ -614,7 +616,7 @@ GoCD.script {
 
         stage('publish-stable-releases-json') {
           //credentials for gocd stable builds
-          secureEnvironmentVariables = secureEnvironmentVariableForGoCD
+          environmentVariables = environmentVariableForGoCD
           jobs {
             job('publish') {
               elasticProfileId = 'ecs-gocd-dev-build'
@@ -641,7 +643,7 @@ GoCD.script {
 
         stage('publish-latest-json') {
           //credentials for gocd update channel
-          secureEnvironmentVariables = secureEnvironmentVariableForUpdateChannel
+          environmentVariables = environmentVariableForUpdateChannel
           jobs {
             job('publish') {
               elasticProfileId = 'ecs-gocd-dev-build'

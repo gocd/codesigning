@@ -1,19 +1,16 @@
-
-
 task :cleanup_docker do
-  dockerhub_username = env("DOCKERHUB_USERNAME")
-  dockerhub_password = env("DOCKERHUB_PASSWORD")
-  org                = env("DOCKERHUB_ORG")
+  dockerhub_token = env("DOCKERHUB_TOKEN")
+  org = env("DOCKERHUB_ORG")
 
   raise "ORG can't be `gocd`! We can't delete the official stable images." if org.eql?("gocd")
 
   require 'rest-client'
   require 'json'
 
-  login = RestClient.post('https://hub.docker.com/v2/users/login/', {username: dockerhub_username, password: dockerhub_password}.to_json, {:accept => 'application/json', :content_type => 'application/json'})
+  login = RestClient.post('https://hub.docker.com/v2/users/login/', {:accept => 'application/json', :content_type => 'application/json', :Authorization => dockerhub_token})
   token = JSON.parse(login)['token']
 
-  response  = RestClient.get("https://hub.docker.com/v2/repositories/#{org}/?page_size=50", {:accept => 'application/json', :Authorization => "JWT #{token}"})
+  response = RestClient.get("https://hub.docker.com/v2/repositories/#{org}/?page_size=50", {:accept => 'application/json', :Authorization => "JWT #{token}"})
   all_repos = JSON.parse(response)
 
   agents = all_repos['results'].map do |repo|
@@ -22,7 +19,7 @@ task :cleanup_docker do
 
   agents.compact.each do |repo|
     list_all_tags = RestClient.get("https://hub.docker.com/v2/repositories/#{org}/#{repo}/tags?page_size=50", {:accept => 'application/json', :Authorization => "JWT #{token}"})
-    tags          = JSON.parse(list_all_tags)['results'].map() {|result| result['name']}
+    tags = JSON.parse(list_all_tags)['results'].map() { |result| result['name'] }
     puts tags
 
     puts "Deleting tags"

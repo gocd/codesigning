@@ -5,7 +5,7 @@ namespace :docker do
 
   def push_to_dockerhub(source_image, destination_image, exp = true)
     experimental_org = ENV['EXP_DOCKERHUB_ORG'] || 'gocdexperimental'
-    stable_org       = ENV['STABLE_DOCKERHUB_ORG'] || 'gocd'
+    stable_org = ENV['STABLE_DOCKERHUB_ORG'] || 'gocd'
 
     org = exp ? experimental_org : stable_org
     sh("docker tag #{source_image} #{org}/#{destination_image}")
@@ -25,12 +25,13 @@ namespace :docker do
   end
 
   task :dockerhub_login do
-    dockerhub_username = env("DOCKERHUB_USERNAME")
-    dockerhub_password = env("DOCKERHUB_PASSWORD")
-
-    base_encode = Base64.strict_encode64("#{dockerhub_username}:#{dockerhub_password}")
-
-    creds = {:auths => {"https://index.docker.io/v1/" => {:auth => base_encode}}}
+    creds = {
+      :auths => {
+        "https://index.docker.io/v1" => {
+          :auth => env("DOCKERHUB_TOKEN")
+        }
+      }
+    }
 
     mkdir_p "#{Dir.home}/.docker"
     open("#{Dir.home}/.docker/config.json", "w") do |f|
@@ -49,13 +50,13 @@ namespace :docker do
         raise "Found #{manifest_files.size} instead of 1."
       end
 
-      manifest_files.each {|manifest|
+      manifest_files.each { |manifest|
         metadata = JSON.parse(File.read(manifest))
 
-        metadata.each {|image|
+        metadata.each { |image|
           sh("cat docker-#{type}/#{image["file"]} | gunzip | docker load -q")
 
-          source_image      = "#{image["imageName"]}:#{image["tag"]}"
+          source_image = "#{image["imageName"]}:#{image["tag"]}"
           destination_image = "#{get_docker_hub_name(image["imageName"], type)}:#{image["tag"]}"
 
           push_to_dockerhub(source_image, destination_image, true)
@@ -68,7 +69,7 @@ namespace :docker do
   desc 'Publish docker images to hub'
   task :publish_docker_images => :dockerhub_login do
 
-    metadata   = JSON.parse(File.read("version.json"))
+    metadata = JSON.parse(File.read("version.json"))
     go_version = metadata['go_version']
 
     %w[agent server].each do |type|
@@ -78,13 +79,13 @@ namespace :docker do
         raise "Found #{manifest_files.size} instead of 1."
       end
 
-      manifest_files.each {|manifest|
+      manifest_files.each { |manifest|
         metadata = JSON.parse(File.read(manifest))
 
-        metadata.each {|image|
+        metadata.each { |image|
           sh("cat docker-#{type}/#{image["file"]} | gunzip | docker load -q")
 
-          source_image      = "#{image["imageName"]}:#{image["tag"]}"
+          source_image = "#{image["imageName"]}:#{image["tag"]}"
           destination_image = "#{get_docker_hub_name(image["imageName"], type)}:v#{go_version}"
 
           push_to_dockerhub(source_image, destination_image, false)

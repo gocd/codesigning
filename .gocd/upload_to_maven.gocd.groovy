@@ -1,3 +1,7 @@
+static String secretParam(String param) {
+  return "{{SECRET:[build-pipelines][$param]}}".toString()
+}
+
 GoCD.script {
   pipelines {
     pipeline('upload-to-maven') {
@@ -8,14 +12,14 @@ GoCD.script {
       labelTemplate = '${COUNT}'
       lockBehavior = 'none'
       secureEnvironmentVariables = [
-        GOCD_GPG_PASSPHRASE  : 'AES:7lAutKoRKMuSnh3Sbg9DeQ==:8fhND9w/8AWw6dJhmWpTcCdKSsEcOzriQNiKFZD6XtN+sJvZ65NH/QFXRNiy192+SSTKsbhOrFmw+kAKt5+MH1Erd6H54zJjpSgvJUmsJaQ=',
-        GIT_PASSWORD: 'AES:VamvCdi7OX38zp33L7SJbw==:lm7xodTUI06gb39yj/qhX6zmxlkFuCjUx0+HHV5kn+ynJ2PNqfOMu1LmQio0u+Tj'
+        GOCD_GPG_PASSPHRASE: secretParam("GOCD_GPG_PASSPHRASE"),
+        GIT_PASSWORD       : secretParam("GOCD_CI_USER_RELEASE_TOKEN")
       ]
       materials {
         svn('signing-keys') {
           url = "https://github.com/gocd-private/signing-keys/trunk"
           username = "gocd-ci-user"
-          encryptedPassword = "AES:taOvOCaXsoVwzIi+xIGLdA==:GSfhZ6KKt6MXKp/wdYYoyBQKKzbTiyDa+35kDgkEIOF75s9lzerGInbqbUM7nUKc"
+          password = secretParam("GOCD_CI_USER_TOKEN_WITH_REPO_ACCESS")
           destination = "signing-keys"
         }
         git('CodeSigning') {
@@ -39,10 +43,8 @@ GoCD.script {
           environmentVariables = [
             'AUTO_RELEASE_TO_CENTRAL': 'true',
             'EXPERIMENTAL_RELEASE'   : 'false',
-            'MAVEN_NEXUS_USERNAME'   : 'arvindsv'
-          ]
-          secureEnvironmentVariables = [
-            'MAVEN_NEXUS_PASSWORD': 'AES:U0+58CAsIkycH+6DUL+Z6w==:EoTd+MQsXP8iL64+eDUi226NbEOGM3N6RfYxZeXH6C30X70xcKKuaEuFVLATe92Ht9RDNrMhXbv2lAt/iEoEbA=='
+            'MAVEN_NEXUS_USERNAME'   : 'arvindsv',
+            'MAVEN_NEXUS_PASSWORD'   : secretParam("ARVINDSV_NEXUS_PASSWORD")
           ]
           jobs {
             job('upload-to-maven') {

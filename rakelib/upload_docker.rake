@@ -28,9 +28,11 @@ namespace :docker do
     dockerhub_password = env("DOCKERHUB_PASSWORD")
 
     creds = {
-        "https://index.docker.io/v1" => {
-            :username => dockerhub_username,
-            :password => dockerhub_password
+        :auths => {
+            "https://index.docker.io/v1" => {
+                :username => dockerhub_username,
+                :password => dockerhub_password
+            }
         }
     }
 

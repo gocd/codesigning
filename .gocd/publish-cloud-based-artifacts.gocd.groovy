@@ -3,7 +3,7 @@ def amisRegion = [
   EXTRA_AMI_REGION_TO_COPY_TO: 'us-east-1'
 ]
 
-static String secretParam(String param) {
+def secretParam = { String param ->
   return "{{SECRET:[build-pipelines][$param]}}".toString()
 }
 

@@ -1,4 +1,4 @@
-static String secretParam(String param) {
+def secretParam = { String param ->
   return "{{SECRET:[build-pipelines][$param]}}".toString()
 }
 

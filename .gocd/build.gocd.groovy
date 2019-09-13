@@ -58,7 +58,7 @@ def getArtifact = { String source1 ->
   })
 }
 
-static String secretParam(String param) {
+def secretParam = { String param ->
   return "{{SECRET:[build-pipelines][$param]}}".toString()
 }
 
@@ -358,7 +358,7 @@ GoCD.script {
         'BUILD_MAP_USER'            : 'gocd-ci-user',
         'ADDONS_EXPERIMENTAL_BUCKET': 'mini-apps-extensionsexperimentaldownloadss3-hare386lt2d9/addons/experimental',
         'BUILD_MAP_PASSWORD'        : secretParam("GOCD_CI_USER_PR_STATUS_TOKEN"),
-        'CREDENTIALS'               : "${secretParam('ENTERPRISE_USERNAME')}:${secretParam('ENTERPRISE_PASSWORD')}"
+        'CREDENTIALS'               : "${secretParam('ENTERPRISE_USERNAME')}:${secretParam('ENTERPRISE_PASSWORD')}".toString()
       ]
 
       materials() {

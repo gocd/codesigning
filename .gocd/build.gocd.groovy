@@ -104,7 +104,7 @@ GoCD.script {
         svn('signing-keys') {
           url = "https://github.com/gocd-private/signing-keys/trunk"
           username = "gocd-ci-user"
-          encryptedPassword = secretParam("GOCD_CI_USER_TOKEN_WITH_REPO_ACCESS")
+          password = secretParam("GOCD_CI_USER_TOKEN_WITH_REPO_ACCESS")
           destination = "signing-keys"
         }
         dependency('installers') {

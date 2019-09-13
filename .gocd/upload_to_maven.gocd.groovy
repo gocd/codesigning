@@ -11,7 +11,7 @@ GoCD.script {
       group = 'internal'
       labelTemplate = '${COUNT}'
       lockBehavior = 'none'
-      secureEnvironmentVariables = [
+      environmentVariables = [
         GOCD_GPG_PASSPHRASE: secretParam("GOCD_GPG_PASSPHRASE"),
         GIT_PASSWORD       : secretParam("GOCD_CI_USER_RELEASE_TOKEN")
       ]

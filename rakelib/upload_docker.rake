@@ -27,7 +27,7 @@ namespace :docker do
   task :dockerhub_login do
     creds = {
       :auths => {
-        "https://index.docker.io/v1" => {
+        "https://index.docker.io/v1/" => {
           :auth => env("DOCKERHUB_TOKEN")
         }
       }

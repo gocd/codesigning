@@ -73,7 +73,8 @@ GoCD.script {
               elasticProfileId = 'ecs-gocd-dev-build-dind'
               environmentVariables = [
                 DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USER"),
-                DOCKERHUB_PASSWORD: secretParam("DOCKERHUB_PASS")
+                DOCKERHUB_PASSWORD: secretParam("DOCKERHUB_PASS"),
+                DOCKERHUB_TOKEN: secretParam("DOCKERHUB_TOKEN")
               ]
               tasks {
                 fetchArtifact {

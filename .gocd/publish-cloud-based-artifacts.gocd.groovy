@@ -277,7 +277,10 @@ GoCD.script {
             job('update_amis') {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = amisRegion + [
-                DOCKERHUB_ORG: 'gocd'
+                DOCKERHUB_ORG: 'gocd',
+                DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USER"),
+                DOCKERHUB_PASSWORD: secretParam("DOCKERHUB_PASS"),
+                DOCKERHUB_TOKEN: secretParam("DOCKERHUB_TOKEN")
               ]
               tasks {
                 fetchArtifact {
@@ -300,6 +303,8 @@ GoCD.script {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = [
                 DOCKERHUB_ORG: 'gocdexperimental',
+                DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USER"),
+                DOCKERHUB_PASSWORD: secretParam("DOCKERHUB_PASS"),
                 DOCKERHUB_TOKEN: secretParam("DOCKERHUB_TOKEN")
               ]
               tasks {

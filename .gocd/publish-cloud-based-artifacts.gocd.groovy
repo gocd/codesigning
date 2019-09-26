@@ -309,7 +309,7 @@ GoCD.script {
               ]
               tasks {
                 exec {
-                  commandLine = ['bash', '-c', 'git pull && bundle install && bundle exec rake cleanup_docker']
+                  commandLine = ['bash', '-c', 'bundle install && bundle exec rake cleanup_docker']
                   runIf = 'passed'
                   workingDir = "codesigning"
                 }

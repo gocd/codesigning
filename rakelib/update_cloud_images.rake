@@ -78,7 +78,7 @@ def docker_agents(version)
   dockerhub_token = env("DOCKERHUB_TOKEN")
   org = env("DOCKERHUB_ORG")
 
-  login = RestClient.post('https://hub.docker.com/v2/users/login/', {:accept => 'application/json', :content_type => 'application/json', :Authorization => dockerhub_token})
+  login = RestClient.post('https://hub.docker.com/v2/users/login/',{}, {:accept => 'application/json', :content_type => 'application/json', :Authorization => dockerhub_token})
   token = JSON.parse(login)['token']
 
   response = RestClient.get("https://hub.docker.com/v2/repositories/#{org}/?page_size=50", {:accept => 'application/json', :Authorization => "JWT #{token}"})

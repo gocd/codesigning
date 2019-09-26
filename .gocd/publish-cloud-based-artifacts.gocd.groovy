@@ -290,7 +290,7 @@ GoCD.script {
                   destination = "codesigning"
                 }
                 exec {
-                  commandLine = ['bash', '-c', 'bundle install && bundle exec rake update_cloud_images']
+                  commandLine = ['bash', '-c', 'git pull && bundle install && bundle exec rake update_cloud_images']
                   runIf = 'passed'
                   workingDir = "codesigning"
                 }
@@ -299,9 +299,9 @@ GoCD.script {
             job('docker_cleanup') {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = [
-                DOCKERHUB_ORG: 'gocdexperimental'
+                DOCKERHUB_ORG: 'gocdexperimental',
+                DOCKERHUB_TOKEN: secretParam("DOCKERHUB_TOKEN")
               ]
-              environmentVariables = [DOCKERHUB_TOKEN: secretParam("DOCKERHUB_TOKEN")]
               tasks {
                 exec {
                   commandLine = ['bash', '-c', 'bundle install && bundle exec rake cleanup_docker']

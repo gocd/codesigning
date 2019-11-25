@@ -111,10 +111,6 @@ GoCD.script {
           pipeline = 'installers'
           stage = 'docker'
         }
-        dependency('regression') {
-          pipeline = 'regression'
-          stage = 'regression-linux'
-        }
         dependency('regression-SPAs') {
           pipeline = 'regression-SPAs'
           stage = 'Firefox'

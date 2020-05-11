@@ -54,6 +54,114 @@ GoCD.script {
             }
           }
         }
+
+        stage('update-gocd-versions') {
+          artifactCleanupProhibited = false
+          cleanWorkingDir = false
+          fetchMaterials = true
+          environmentVariables = [GITHUB_TOKEN: "{{SECRET:[build-pipelines][GOCD_CI_USER_RELEASE_TOKEN]}}"]
+          jobs {
+            job('update-gocd') {
+              elasticProfileId = 'ecs-gocd-dev-build'
+              tasks {
+                fetchArtifact {
+                  destination = 'codesigning'
+                  file = true
+                  job = 'dist'
+                  pipeline = 'installers/code-sign/PublishStableRelease'
+                  runIf = 'passed'
+                  source = 'dist/meta/version.json'
+                  stage = 'dist'
+                }
+                exec {
+                  commandLine = ['npm', 'install']
+                  runIf = 'passed'
+                  workingDir = 'codesigning'
+                }
+                exec {
+                  commandLine = ['node', 'lib/bump_gocd_version.js']
+                  runIf = 'passed'
+                  workingDir = 'codesigning'
+                }
+              }
+            }
+
+            job('update-go-plugins') {
+              elasticProfileId = 'ecs-gocd-dev-build'
+              tasks {
+                fetchArtifact {
+                  destination = 'codesigning'
+                  file = true
+                  job = 'dist'
+                  pipeline = 'installers/code-sign/PublishStableRelease'
+                  runIf = 'passed'
+                  source = 'dist/meta/version.json'
+                  stage = 'dist'
+                }
+                exec {
+                  commandLine = ['npm', 'install']
+                  runIf = 'passed'
+                  workingDir = 'codesigning'
+                }
+                exec {
+                  commandLine = ['node', 'lib/bump_go_plugins_version.js']
+                  runIf = 'passed'
+                  workingDir = 'codesigning'
+                }
+              }
+            }
+
+            job('update-business_continuity') {
+              elasticProfileId = 'ecs-gocd-dev-build'
+              tasks {
+                fetchArtifact {
+                  destination = 'codesigning'
+                  file = true
+                  job = 'dist'
+                  pipeline = 'installers/code-sign/PublishStableRelease'
+                  runIf = 'passed'
+                  source = 'dist/meta/version.json'
+                  stage = 'dist'
+                }
+                exec {
+                  commandLine = ['npm', 'install']
+                  runIf = 'passed'
+                  workingDir = 'codesigning'
+                }
+                exec {
+                  commandLine = ['node', 'lib/bump_gocd_version_business_continuity.js']
+                  runIf = 'passed'
+                  workingDir = 'codesigning'
+                }
+              }
+            }
+
+            job('update-installer-testing') {
+              elasticProfileId = 'ecs-gocd-dev-build'
+              tasks {
+                fetchArtifact {
+                  destination = 'codesigning'
+                  file = true
+                  job = 'dist'
+                  pipeline = 'installers/code-sign/PublishStableRelease'
+                  runIf = 'passed'
+                  source = 'dist/meta/version.json'
+                  stage = 'dist'
+                }
+                exec {
+                  commandLine = ['npm', 'install']
+                  runIf = 'passed'
+                  workingDir = 'codesigning'
+                }
+                exec {
+                  commandLine = ['node', 'lib/bump_gocd_version_installer_testing.js']
+                  runIf = 'passed'
+                  workingDir = 'codesigning'
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -243,7 +243,12 @@ GoCD.script {
 
         stage('aggregate-jsons') {
           //credentials for gocd experimental builds
-          environmentVariables = environmentVariableForGoCD
+          environmentVariables = environmentVariableForGoCD + [
+            DOCKERHUB_ORG     : 'gocdexperimental',
+            DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USER"),
+            DOCKERHUB_PASSWORD: secretParam("DOCKERHUB_PASS"),
+            DOCKERHUB_TOKEN   : secretParam("DOCKERHUB_TOKEN")
+          ]
           jobs {
             job('aggregate-jsons') {
               elasticProfileId = 'ecs-gocd-dev-build'

@@ -90,8 +90,62 @@ namespace :metadata do
     sh("aws s3 cp #{'--no-progress' unless $stdin.tty?} out/latest.json s3://#{download_bucket_url}/binaries/#{go_full_version}/ --acl public-read --cache-control 'max-age=31536000'")
   end
 
+  desc 'create cloud json with experimental'
+  task :cloud_json, [:download_bucket_url] do |t, args|
+    require 'aws-sdk'
+    require 'rest-client'
+    require_relative '../lib/version_file_reader'
+
+    version                  = VersionFileReader.go_version
+    full_version                  = VersionFileReader.go_full_version
+    release_time             = Time.now.utc
+    download_bucket_url      = args[:download_bucket_url]
+    cloud_images_for_version = {
+        go_version:            full_version,
+        release_time_readable: release_time.xmlschema,
+        release_time:          release_time.to_i,
+        server_docker:         [{image_name: 'gocd-server'}, {image_name: 'gocd-server-centos-8'}],
+        agents_docker:         docker_agents(version)
+    }
+
+    s3_client = Aws::S3::Client.new(region: 'us-east-1')
+
+    begin
+      response = s3_client.get_object(bucket: download_bucket_url, key: 'cloud.json')
+    rescue Aws::S3::Errors::NoSuchKey
+      File.open('cloud.json', 'w') {|f| f.write([cloud_images_for_version].to_json)}
+      puts "Creating #{download_bucket_url}/cloud.json"
+      s3_client.put_object({
+                               acl:           "public-read",
+                               body:          File.read('cloud.json'),
+                               bucket:        download_bucket_url,
+                               cache_control: "max-age=600",
+                               content_type:  'application/json',
+                               content_md5:   Digest::MD5.file('cloud.json').base64digest,
+                               key:           'cloud.json'
+                           })
+    end
+    unless response.nil?
+      cloud_images_from_bucket = JSON.parse(response.body.string)
+      cloud_images_from_bucket.delete_if {|hash| hash['go_version'] == version || hash[:go_version] == version}
+      cloud_images_from_bucket << cloud_images_for_version
+      to_be_uploaded = cloud_images_from_bucket.sort_by {|hash| ::Gem::Version.new(hash['go_version'] || hash[:go_version])}
+      File.open('cloud.json', 'w') {|f| f.write(to_be_uploaded.to_json)}
+      puts "Uploading cloud.json to #{download_bucket_url}/cloud.json"
+      s3_client.put_object({
+                               acl:           "public-read",
+                               body:          File.read('cloud.json'),
+                               bucket:        download_bucket_url,
+                               cache_control: "max-age=600",
+                               content_type:  'application/json',
+                               content_md5:   Digest::MD5.file('cloud.json').base64digest,
+                               key:           'cloud.json'
+                           })
+    end
+  end
+
   desc 'aggregate all json for variation of installers created'
-  task :aggregate_jsons, [:download_bucket_url] => [:metadata_json, :update_check_json, :releases_json]
+  task :aggregate_jsons, [:download_bucket_url] => [:metadata_json, :update_check_json, :releases_json, :cloud_json]
 
   desc "Generate all metadata for this release"
   task :generate, [:update_check_bucket_url] do |t, args|

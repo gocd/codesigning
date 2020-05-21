@@ -96,7 +96,6 @@ namespace :metadata do
     require 'rest-client'
 
     metadata                 = JSON.parse(File.read("#{meta_source_dir}/version.json"))
-    version                  = metadata['go_version']
     full_version             = metadata['go_full_version']
     release_time             = Time.now.utc
     download_bucket_url      = args[:download_bucket_url].split('/')[0]
@@ -105,7 +104,7 @@ namespace :metadata do
         release_time_readable: release_time.xmlschema,
         release_time:          release_time.to_i,
         server_docker:         [{image_name: 'gocd-server'}, {image_name: 'gocd-server-centos-8'}],
-        agents_docker:         docker_agents(version)
+        agents_docker:         docker_agents(full_version)
     }
 
     s3_client = Aws::S3::Client.new(region: 'us-east-1')
@@ -128,7 +127,7 @@ namespace :metadata do
     end
     unless response.nil?
       cloud_images_from_bucket = JSON.parse(response.body.string)
-      cloud_images_from_bucket.delete_if {|hash| hash['go_version'] == version || hash[:go_version] == version}
+      cloud_images_from_bucket.delete_if {|hash| hash['go_version'] == full_version || hash[:go_version] == full_version}
       cloud_images_from_bucket << cloud_images_for_version
       to_be_uploaded = cloud_images_from_bucket.sort_by {|hash| ::Gem::Version.new(hash['go_version'] || hash[:go_version])}
       File.open('cloud.json', 'w') {|f| f.write(to_be_uploaded.to_json)}

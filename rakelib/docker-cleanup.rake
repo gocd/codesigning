@@ -22,13 +22,15 @@ task :cleanup_docker do
   agents.compact.each do |repo|
     list_all_tags = RestClient.get("https://hub.docker.com/v2/repositories/#{org}/#{repo}/tags?page_size=50", {:accept => 'application/json', :Authorization => "JWT #{token}"})
     tags = JSON.parse(list_all_tags)['results'].map() { |result| result['name'] }
-    puts tags
 
-    puts "Deleting tags"
+    # sort the tags in a reverse order of version and not deleting the most recent experimental tag
+    tags = tags.sort.reverse.drop(1)
+
+    puts "Deleting tags: #{tags}"
 
     tags.each do |tag|
       delete_tag = RestClient.delete("https://hub.docker.com/v2/repositories/#{org}/#{repo}/tags/#{tag}/", {:accept => 'application/json', :Authorization => "JWT #{token}"})
-      puts delete_tag
+      puts "Response for #{tag}: #{delete_tag}"
     end
   end
 

@@ -94,10 +94,10 @@ namespace :metadata do
   task :cloud_json, [:download_bucket_url] do |t, args|
     require 'aws-sdk'
     require 'rest-client'
-    require_relative '../lib/version_file_reader'
 
-    version                  = VersionFileReader.go_version
-    full_version                  = VersionFileReader.go_full_version
+    metadata                 = JSON.parse(File.read("#{meta_source_dir}/version.json"))
+    version                  = metadata['go_version']
+    full_version             = metadata['go_full_version']
     release_time             = Time.now.utc
     download_bucket_url      = args[:download_bucket_url]
     cloud_images_for_version = {

@@ -99,7 +99,7 @@ namespace :metadata do
     version                  = metadata['go_version']
     full_version             = metadata['go_full_version']
     release_time             = Time.now.utc
-    download_bucket_url      = args[:download_bucket_url]
+    download_bucket_url      = args[:download_bucket_url].split('/')[0]
     cloud_images_for_version = {
         go_version:            full_version,
         release_time_readable: release_time.xmlschema,
@@ -109,11 +109,12 @@ namespace :metadata do
     }
 
     s3_client = Aws::S3::Client.new(region: 'us-east-1')
+    cloud_key = 'experimental/cloud.json'
+    File.open('cloud.json', 'w') {|f| f.write([cloud_images_for_version].to_json)}
 
     begin
-      response = s3_client.get_object(bucket: download_bucket_url, key: 'cloud.json')
+      response = s3_client.get_object(bucket: download_bucket_url, key: cloud_key)
     rescue Aws::S3::Errors::NoSuchKey
-      File.open('cloud.json', 'w') {|f| f.write([cloud_images_for_version].to_json)}
       puts "Creating #{download_bucket_url}/cloud.json"
       s3_client.put_object({
                                acl:           "public-read",
@@ -122,7 +123,7 @@ namespace :metadata do
                                cache_control: "max-age=600",
                                content_type:  'application/json',
                                content_md5:   Digest::MD5.file('cloud.json').base64digest,
-                               key:           'cloud.json'
+                               key:           cloud_key
                            })
     end
     unless response.nil?
@@ -139,7 +140,7 @@ namespace :metadata do
                                cache_control: "max-age=600",
                                content_type:  'application/json',
                                content_md5:   Digest::MD5.file('cloud.json').base64digest,
-                               key:           'cloud.json'
+                               key:           cloud_key
                            })
     end
   end

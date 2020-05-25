@@ -739,6 +739,3 @@ DEPENDENCIES
   aws-sdk
   rake
   rest-client
-
-BUNDLED WITH
-   1.17.1

@@ -141,7 +141,7 @@ GoCD.script {
               }
             }
             job('deb') {
-              elasticProfileId = 'ubuntu-16.04'
+              elasticProfileId = 'ubuntu'
               tasks {
                 addAll(cleanTasks())
                 add(fetchArtifactTask('deb'))
@@ -548,7 +548,7 @@ GoCD.script {
           environmentVariables = environmentVariableForGoCD
           jobs {
             job('apt') {
-              elasticProfileId = 'ubuntu-16.04'
+              elasticProfileId = 'ubuntu'
               tasks {
                 fetchDirectory {
                   pipeline = 'installers/code-sign'

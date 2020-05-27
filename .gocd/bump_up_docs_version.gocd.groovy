@@ -33,7 +33,7 @@ GoCD.script {
               elasticProfileId = 'ecs-gocd-dev-build'
               tasks {
                 exec {
-                  commandLine = ['bash', '-c', 'bundle install --path .bundle --binstubs']
+                  commandLine = ['bash', '-c', 'bundle']
                   runIf = 'passed'
                 }
                 fetchArtifact {
@@ -54,7 +54,7 @@ GoCD.script {
               elasticProfileId = 'ecs-gocd-dev-build'
               tasks {
                 exec {
-                  commandLine = ['bash', '-c', 'bundle install --path .bundle --binstubs']
+                  commandLine = ['bash', '-c', 'bundle']
                   runIf = 'passed'
                 }
                 fetchArtifact {
@@ -75,7 +75,7 @@ GoCD.script {
               elasticProfileId = 'ecs-gocd-dev-build'
               tasks {
                 exec {
-                  commandLine = ['bash', '-c', 'bundle install --path .bundle --binstubs']
+                  commandLine = ['bash', '-c', 'bundle']
                   runIf = 'passed'
                 }
                 fetchArtifact {
@@ -96,7 +96,7 @@ GoCD.script {
               elasticProfileId = 'ecs-gocd-dev-build'
               tasks {
                 exec {
-                  commandLine = ['bash', '-c', 'bundle install --path .bundle --binstubs']
+                  commandLine = ['bash', '-c', 'bundle']
                   runIf = 'passed'
                 }
                 fetchArtifact {
@@ -117,7 +117,7 @@ GoCD.script {
               elasticProfileId = 'ecs-gocd-dev-build'
               tasks {
                 exec {
-                  commandLine = ['bash', '-c', 'bundle install --path .bundle --binstubs']
+                  commandLine = ['bash', '-c', 'bundle']
                   runIf = 'passed'
                 }
                 fetchArtifact {
@@ -155,7 +155,7 @@ GoCD.script {
                   stage = 'dist'
                 }
                 exec {
-                  commandLine = ['bash', '-c', 'bundle install --path .bundle --binstubs']
+                  commandLine = ['bash', '-c', 'bundle']
                   runIf = 'passed'
                 }
                 exec {
@@ -176,7 +176,7 @@ GoCD.script {
                   stage = 'dist'
                 }
                 exec {
-                  commandLine = ['bash', '-c', 'bundle install --path .bundle --binstubs']
+                  commandLine = ['bash', '-c', 'bundle']
                   runIf = 'passed'
                 }
                 exec {
@@ -197,7 +197,7 @@ GoCD.script {
                   stage = 'dist'
                 }
                 exec {
-                  commandLine = ['bash', '-c', 'bundle install --path .bundle --binstubs']
+                  commandLine = ['bash', '-c', 'bundle']
                   runIf = 'passed'
                 }
                 exec {
@@ -218,7 +218,7 @@ GoCD.script {
                   stage = 'dist'
                 }
                 exec {
-                  commandLine = ['bash', '-c', 'bundle install --path .bundle --binstubs']
+                  commandLine = ['bash', '-c', 'bundle']
                   runIf = 'passed'
                 }
                 exec {

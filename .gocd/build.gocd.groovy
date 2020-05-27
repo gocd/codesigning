@@ -131,7 +131,7 @@ GoCD.script {
                 add(fetchArtifactTask('rpm'))
                 add(fetchArtifactTask('meta'))
                 bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  commandString = "bundle"
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -158,7 +158,7 @@ GoCD.script {
                 add(fetchArtifactTask('zip'))
                 add(fetchArtifactTask('meta'))
                 bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  commandString = "bundle"
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -185,7 +185,7 @@ GoCD.script {
                 add(fetchArtifactTask('osx'))
                 add(fetchArtifactTask('meta'))
                 bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  commandString = "bundle"
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -220,7 +220,7 @@ GoCD.script {
                   destination = "codesigning"
                 }
                 bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  commandString = "bundle"
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -262,7 +262,7 @@ GoCD.script {
                 addAll(cleanTasks())
                 add(fetchArtifactTask('meta'))
                 bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  commandString = "bundle"
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -286,7 +286,7 @@ GoCD.script {
                 add(fetchArtifactTask('meta'))
                 add(getArtifact())
                 bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  commandString = "bundle"
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -340,7 +340,7 @@ GoCD.script {
                   destination = "codesigning"
                 }
                 bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  commandString = "bundle"
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -437,7 +437,7 @@ GoCD.script {
                   destination = "codesigning/src/pkg_for_upload"
                 }
                 bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  commandString = "bundle"
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -531,7 +531,7 @@ GoCD.script {
                   destination = "codesigning/src"
                 }
                 bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  commandString = "bundle"
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -575,7 +575,7 @@ GoCD.script {
                   destination = "codesigning/src"
                 }
                 bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  commandString = "bundle"
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -602,7 +602,7 @@ GoCD.script {
                   destination = "codesigning/src"
                 }
                 bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  commandString = "bundle"
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -634,7 +634,7 @@ GoCD.script {
                   destination = "codesigning/src"
                 }
                 bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  commandString = "bundle"
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -661,7 +661,7 @@ GoCD.script {
                   destination = "codesigning/src"
                 }
                 bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  commandString = "bundle"
                   workingDir = 'codesigning'
                 }
                 bash {

@@ -2,6 +2,8 @@ out/
 src/
 tmp/
 .idea/
-/gocd-groovy-dsl-config-plugin-*.jar
-/.bundle/
-/node_modules/
+gocd-groovy-dsl-config-plugin-*.jar
+.bundle/ruby
+node_modules
+.node-version
+.nvmrc

@@ -103,7 +103,7 @@ GoCD.script {
                   destination = "codesigning"
                 }
                 bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  commandString = "bundle"
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -268,7 +268,7 @@ GoCD.script {
               ]
               tasks {
                 exec {
-                  commandLine = ['bash', '-c', 'bundle install && bundle exec rake empty_experimental_bucket']
+                  commandLine = ['bash', '-c', 'bundle && bundle exec rake empty_experimental_bucket']
                   runIf = 'passed'
                   workingDir = "codesigning"
                 }
@@ -293,7 +293,7 @@ GoCD.script {
                   destination = "codesigning"
                 }
                 exec {
-                  commandLine = ['bash', '-c', 'bundle install && bundle exec rake update_cloud_images']
+                  commandLine = ['bash', '-c', 'bundle && bundle exec rake update_cloud_images']
                   runIf = 'passed'
                   workingDir = "codesigning"
                 }
@@ -309,7 +309,7 @@ GoCD.script {
               ]
               tasks {
                 exec {
-                  commandLine = ['bash', '-c', 'bundle install && bundle exec rake cleanup_docker']
+                  commandLine = ['bash', '-c', 'bundle && bundle exec rake cleanup_docker']
                   runIf = 'passed'
                   workingDir = "codesigning"
                 }

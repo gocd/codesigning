@@ -76,7 +76,7 @@ GoCD.script {
                   destination = "codesigning"
                 }
                 bash {
-                  commandString = "bundle install --jobs 4 --path .bundle --clean"
+                  commandString = "bundle"
                   workingDir = 'codesigning'
                 }
                 bash {

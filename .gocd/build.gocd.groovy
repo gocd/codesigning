@@ -310,7 +310,7 @@ GoCD.script {
                   workingDir = 'codesigning'
                 }
                 bash {
-                  commandString = 'bundle exec rake --trace rake cloudfront:invalidate'
+                  commandString = 'bundle exec rake --trace cloudfront:invalidate'
                   workingDir = 'codesigning'
                 }
               }

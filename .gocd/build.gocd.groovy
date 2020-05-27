@@ -298,6 +298,26 @@ GoCD.script {
           }
         }
 
+        stage('cloudfront-invalidation') {
+          environmentVariables = environmentVariableForGoCD
+
+          jobs {
+            job('invalidate-distributions') {
+              elasticProfileId = 'ecs-gocd-dev-build'
+              tasks {
+                bash {
+                  commandString = "bundle"
+                  workingDir = 'codesigning'
+                }
+                bash {
+                  commandString = 'bundle exec rake --trace rake cloudfront:invalidate'
+                  workingDir = 'codesigning'
+                }
+              }
+            }
+          }
+        }
+
         stage('upload-to-maven-exp') {
           cleanWorkingDir = true
           approval {

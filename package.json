@@ -14,8 +14,8 @@
   "homepage": "https://github.com/gocd/codesigning#readme",
   "private": true,
   "dependencies": {
-    "docker-hub-api": "^0.5.1",
-    "request": "^2.85.0",
-    "github-base": "^0.5.4"
+    "docker-hub-api": "^0.8.0",
+    "request": "^2.88.2",
+    "github-base": "^1.0.0"
   }
 }

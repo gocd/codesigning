@@ -59,7 +59,10 @@ GoCD.script {
           artifactCleanupProhibited = false
           cleanWorkingDir = false
           fetchMaterials = true
-          environmentVariables = [GITHUB_TOKEN: "{{SECRET:[build-pipelines][GOCD_CI_USER_RELEASE_TOKEN]}}"]
+          environmentVariables = [
+            GIT_USERNAME: 'gocd-ci-user',
+            GITHUB_TOKEN: "{{SECRET:[build-pipelines][GOCD_CI_USER_RELEASE_TOKEN]}}"
+          ]
           jobs {
             job('update-gocd') {
               elasticProfileId = 'ecs-gocd-dev-build'

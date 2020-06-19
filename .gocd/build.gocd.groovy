@@ -493,14 +493,6 @@ GoCD.script {
           destination = "codesigning"
           blacklist = ["**/*.*", "**/*"]
         }
-        git('enterprise') {
-          url = 'https://git.gocd.io/git/gocd-private/enterprise'
-          username = "gocd"
-          password = secretParam("GOCD_USER_PASSWORD")
-          destination = "go-enterprise"
-          shallowClone = "true"
-          blacklist = ["**/*.*", "**/*"]
-        }
         svn('signing-keys') {
           url = "https://github.com/gocd-private/signing-keys/trunk"
           username = "gocd-ci-user"
@@ -510,18 +502,6 @@ GoCD.script {
         dependency('code-sign') {
           pipeline = 'code-sign'
           stage = 'metadata'
-        }
-        dependency('upload-addons') {
-          pipeline = 'upload-addons'
-          stage = 'upload-addons'
-        }
-        dependency('go-packages') {
-          pipeline = 'go-packages'
-          stage = 'fetch_from_build_go_cd'
-        }
-        dependency('go-addon-build') {
-          pipeline = 'go-addon-build'
-          stage = 'build-addons'
         }
         dependency('verify-usage-data-reporting') {
           pipeline = 'verify-usage-data-reporting'
@@ -600,38 +580,6 @@ GoCD.script {
                 }
                 bash {
                   commandString = 'bundle exec rake --trace yum:createrepo[${STABLE_DOWNLOAD_BUCKET}]'
-                  workingDir = 'codesigning'
-                }
-              }
-            }
-          }
-        }
-
-        stage('promote-addons') {
-          //credentials for gocd addons experimental/stable builds
-          environmentVariables = environmentVariableForAddons
-          jobs {
-            job('promote-addons') {
-              elasticProfileId = 'ecs-gocd-dev-build'
-              tasks {
-                fetchDirectory {
-                  pipeline = 'installers/code-sign'
-                  stage = 'dist'
-                  job = 'dist'
-                  source = "dist/meta"
-                  destination = "codesigning/src"
-                }
-                bash {
-                  commandString = "bundle"
-                  workingDir = 'codesigning'
-                }
-                bash {
-                  commandString = 'bundle exec rake --trace promote:copy_addon_from_experimental_to_stable[${ADDONS_EXPERIMENTAL_BUCKET},${ADDONS_STABLE_BUCKET}]'
-                  workingDir = 'codesigning'
-                }
-
-                bash {
-                  commandString = 'bundle exec rake --trace promote:promote_addons_metadata[${ADDONS_EXPERIMENTAL_BUCKET},${ADDONS_STABLE_BUCKET}]'
                   workingDir = 'codesigning'
                 }
               }

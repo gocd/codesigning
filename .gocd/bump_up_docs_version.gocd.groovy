@@ -113,27 +113,6 @@ GoCD.script {
                 }
               }
             }
-            job('extensions-docs.gocd.org') {
-              elasticProfileId = 'ecs-gocd-dev-build'
-              tasks {
-                exec {
-                  commandLine = ['bash', '-c', 'bundle']
-                  runIf = 'passed'
-                }
-                fetchArtifact {
-                  file = true
-                  job = 'dist'
-                  pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
-                  source = 'dist/meta/version.json'
-                  stage = 'dist'
-                }
-                exec {
-                  commandLine = ['bash', '-c', 'bundle exec rake bump_extensions_doc_version']
-                  runIf = 'passed'
-                }
-              }
-            }
           }
         }
         stage('create_docs_pipeline') {

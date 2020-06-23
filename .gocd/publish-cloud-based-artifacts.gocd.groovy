@@ -129,56 +129,6 @@ GoCD.script {
                 }
               }
             }
-            job('publish-server-amis') {
-              elasticProfileId = 'ecs-gocd-dev-build'
-              environmentVariables = amisRegion
-              tasks {
-                exec {
-                  commandLine = ['bash', '-c', 'wget -q https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip && unzip packer_0.12.3_linux_amd64.zip']
-                  runIf = 'passed'
-                  workingDir = "gocd-cloud"
-                }
-                fetchArtifact {
-                  file = true
-                  job = 'dist'
-                  pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
-                  source = 'dist/meta/version.json'
-                  stage = 'dist'
-                  destination = ""
-                }
-                exec {
-                  commandLine = ['bash', '-c', 'export GOCD_VERSION=$(jq -r ".go_version" ../version.json) && ./packer build -var gocd_version=${GOCD_VERSION} go-server-packer.json']
-                  runIf = 'passed'
-                  workingDir = "gocd-cloud"
-                }
-              }
-            }
-            job('publish-demo-amis') {
-              elasticProfileId = 'ecs-gocd-dev-build'
-              environmentVariables = amisRegion
-              tasks {
-                exec {
-                  commandLine = ['bash', '-c', 'wget -q https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip && unzip packer_0.12.3_linux_amd64.zip']
-                  runIf = 'passed'
-                  workingDir = "gocd-cloud"
-                }
-                fetchArtifact {
-                  file = true
-                  job = 'dist'
-                  pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
-                  source = 'dist/meta/version.json'
-                  stage = 'dist'
-                  destination = ""
-                }
-                exec {
-                  commandLine = ['bash', '-c', 'export GOCD_VERSION=$(jq -r ".go_version" ../version.json) && ./packer build -var gocd_version=${GOCD_VERSION} -only=amazon-ebs go-server-demo-packer.json']
-                  runIf = 'passed'
-                  workingDir = "gocd-cloud"
-                }
-              }
-            }
             job('choco-server') {
               elasticProfileId = 'window-dev-build'
               environmentVariables = [

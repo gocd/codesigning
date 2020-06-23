@@ -12,8 +12,6 @@ task :update_cloud_images do
     go_version: version,
     release_time_readable: release_time.xmlschema,
     release_time: release_time.to_i,
-    server_amis: server_amis(version),
-    demo_amis: demo_amis(version),
     server_docker: [{image_name: 'gocd-server'}],
     agents_docker: docker_agents(version)
   }
@@ -56,24 +54,6 @@ end
 
 private
 
-def server_amis(version)
-  get_amis('Server', version)
-end
-
-def demo_amis(version)
-  get_amis('Demo', version)
-end
-
-def get_amis(type, version)
-  amis = []
-  regions = [env("REGION"), env("EXTRA_AMI_REGION_TO_COPY_TO")]
-  regions.each do |region|
-    owned_images = image_list(region, type, version)
-    populate_amis(amis, region, owned_images)
-  end
-  amis
-end
-
 def docker_agents(version)
   # dockerhub_token = env("DOCKERHUB_TOKEN")
   dockerhub_username = env("DOCKERHUB_USERNAME")
@@ -93,43 +73,6 @@ def docker_agents(version)
   end
   logout = RestClient.post('https://hub.docker.com/v2/logout/', {}, {:accept => 'application/json', :Authorization => "JWT #{token}"})
   agents.compact.sort_by { |agent| agent[:image_name] }
-end
-
-
-def populate_amis(all_amis, region, self_owned_images)
-  self_owned_images.images.each do |image|
-    all_amis << image_details(image, region)
-  end
-end
-
-def image_list(region, type, version)
-  ec2_client = Aws::EC2::Client.new(region: region)
-  ec2_client.describe_images({
-                               owners: ["self"],
-                               filters: [
-                                 {
-                                   name: "tag:GoCD-Version",
-                                   values: ["#{version}"]
-                                 },
-                                 {
-                                   name: "tag:Name",
-                                   values: ["GoCD #{type} #{version}"]
-                                 },
-                                 {
-                                   name: "state",
-                                   values: ["available"]
-                                 }
-                               ]
-                             })
-end
-
-def image_details(image, region)
-  {
-    region: region,
-    ami_id: image.image_id,
-    image_name: image.name,
-    href: "https://console.aws.amazon.com/ec2/home?region=#{region}#launchAmi=#{image.image_id}"
-  }
 end
 
 def env(key)

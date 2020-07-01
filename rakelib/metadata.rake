@@ -108,12 +108,13 @@ namespace :metadata do
     }
 
     s3_client = Aws::S3::Client.new(region: 'us-east-1')
+    File.open('cloud.json', 'w') {|f| f.write([cloud_images_for_version].to_json)}
     cloud_key = 'experimental/cloud.json'
 
     puts "Creating #{download_bucket_url}/cloud.json"
     s3_client.put_object({
                              acl:           "public-read",
-                             body:          [cloud_images_for_version].to_json,
+                             body:          File.read('cloud.json'),
                              bucket:        download_bucket_url,
                              cache_control: "max-age=600",
                              content_type:  'application/json',

@@ -109,39 +109,17 @@ namespace :metadata do
 
     s3_client = Aws::S3::Client.new(region: 'us-east-1')
     cloud_key = 'experimental/cloud.json'
-    File.open('cloud.json', 'w') {|f| f.write([cloud_images_for_version].to_json)}
 
-    begin
-      response = s3_client.get_object(bucket: download_bucket_url, key: cloud_key)
-    rescue Aws::S3::Errors::NoSuchKey
-      puts "Creating #{download_bucket_url}/cloud.json"
-      s3_client.put_object({
-                               acl:           "public-read",
-                               body:          File.read('cloud.json'),
-                               bucket:        download_bucket_url,
-                               cache_control: "max-age=600",
-                               content_type:  'application/json',
-                               content_md5:   Digest::MD5.file('cloud.json').base64digest,
-                               key:           cloud_key
-                           })
-    end
-    unless response.nil?
-      cloud_images_from_bucket = JSON.parse(response.body.string)
-      cloud_images_from_bucket.delete_if {|hash| hash['go_version'] == full_version || hash[:go_version] == full_version}
-      cloud_images_from_bucket << cloud_images_for_version
-      to_be_uploaded = cloud_images_from_bucket.sort_by {|hash| ::Gem::Version.new(hash['go_version'] || hash[:go_version])}
-      File.open('cloud.json', 'w') {|f| f.write(to_be_uploaded.to_json)}
-      puts "Uploading cloud.json to #{download_bucket_url}/cloud.json"
-      s3_client.put_object({
-                               acl:           "public-read",
-                               body:          File.read('cloud.json'),
-                               bucket:        download_bucket_url,
-                               cache_control: "max-age=600",
-                               content_type:  'application/json',
-                               content_md5:   Digest::MD5.file('cloud.json').base64digest,
-                               key:           cloud_key
-                           })
-    end
+    puts "Creating #{download_bucket_url}/cloud.json"
+    s3_client.put_object({
+                             acl:           "public-read",
+                             body:          [cloud_images_for_version].to_json,
+                             bucket:        download_bucket_url,
+                             cache_control: "max-age=600",
+                             content_type:  'application/json',
+                             content_md5:   Digest::MD5.file('cloud.json').base64digest,
+                             key:           cloud_key
+                         })
   end
 
   desc 'aggregate all json for variation of installers created'

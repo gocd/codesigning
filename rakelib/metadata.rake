@@ -169,4 +169,36 @@ namespace :metadata do
       end
     end
   end
+
+  task :cleanup_cloud_json, [:download_bucket_url] do |t, args|
+    require 'aws-sdk'
+    require 'rest-client'
+
+    download_bucket_url      = args[:download_bucket_url].split('/')[0]
+
+    s3_client = Aws::S3::Client.new(region: 'us-east-1')
+    cloud_key = 'experimental/cloud.json'
+
+    begin
+      response = s3_client.get_object(bucket: download_bucket_url, key: cloud_key)
+    rescue Aws::S3::Errors::NoSuchKey
+      puts "There is no file in #{download_bucket_url} with key '#{cloud_key}'"
+    end
+    unless response.nil?
+      cloud_images_from_bucket = JSON.parse(response.body.string)
+      puts "Removing all values except the latest one"
+      to_be_uploaded = cloud_images_from_bucket.sort_by {|hash| ::Gem::Version.new(hash['go_version'] || hash[:go_version])}.reverse.take(1)
+      File.open('cloud.json', 'w') {|f| f.write(to_be_uploaded.to_json)}
+      puts "Uploading cloud.json in #{download_bucket_url}"
+      s3_client.put_object({
+                               acl:           "public-read",
+                               body:          File.read('cloud.json'),
+                               bucket:        download_bucket_url,
+                               cache_control: "max-age=600",
+                               content_type:  'application/json',
+                               content_md5:   Digest::MD5.file('cloud.json').base64digest,
+                               key:           cloud_key
+                           })
+    end
+  end
 end

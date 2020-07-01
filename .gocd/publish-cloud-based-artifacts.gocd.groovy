@@ -222,6 +222,11 @@ GoCD.script {
                   runIf = 'passed'
                   workingDir = "codesigning"
                 }
+                exec {
+                  commandLine = ['bash', '-c', 'bundle exec rake metadata:cleanup_cloud_json[${EXPERIMENTAL_DOWNLOAD_BUCKET}]']
+                  runIf = 'passed'
+                  workingDir = "codesigning"
+                }
               }
             }
             job('update_amis') {

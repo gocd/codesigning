@@ -15,7 +15,6 @@ namespace :yum do
       sh("createrepo --database --update --unique-md-filenames --retain-old-md=5 .")
       sh("gpg --batch --yes --default-key '#{GPG_SIGNING_ID}' --armor --detach-sign --sign --output repodata/repomd.xml.asc repodata/repomd.xml")
       sh("gpg --batch --yes --verify --default-key '#{GPG_SIGNING_ID}' repodata/repomd.xml.asc repodata/repomd.xml")
-      sh("command -v dnf && dnf -y install http://www.nosuchhost.net/~cheese/fedora/packages/epel-8/x86_64/python2-rpmUtils-0.1-1.el8.noarch.rpm || true")
       sh("repoview --title 'GoCD Yum Repository' .")
     end
 

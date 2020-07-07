@@ -15,7 +15,6 @@ namespace :yum do
       sh("createrepo --database --update --unique-md-filenames --retain-old-md=5 .")
       sh("gpg --batch --yes --default-key '#{GPG_SIGNING_ID}' --armor --detach-sign --sign --output repodata/repomd.xml.asc repodata/repomd.xml")
       sh("gpg --batch --yes --verify --default-key '#{GPG_SIGNING_ID}' repodata/repomd.xml.asc repodata/repomd.xml")
-      sh("repoview --title 'GoCD Yum Repository' .")
     end
 
     # yum repomd.xml (low cache ttl)
@@ -23,8 +22,5 @@ namespace :yum do
 
     # rest of the yum metadata (high cache ttl)
     sh("aws s3 sync #{'--no-progress' unless $stdin.tty?} #{signing_dir}/repodata s3://#{bucket_url}/repodata/ --delete --acl public-read --cache-control 'max-age=31536000'")
-
-    # yum repoview (low cache ttl)
-    sh("aws s3 sync #{'--no-progress' unless $stdin.tty?} #{signing_dir}/repoview s3://#{bucket_url}/repoview/ --delete --acl public-read --cache-control 'max-age=600'")
   end
 end

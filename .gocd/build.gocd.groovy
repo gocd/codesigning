@@ -503,10 +503,6 @@ GoCD.script {
           pipeline = 'code-sign'
           stage = 'metadata'
         }
-        dependency('verify-usage-data-reporting') {
-          pipeline = 'verify-usage-data-reporting'
-          stage = 'for-build.gocd.org'
-        }
       }
 
       stages {

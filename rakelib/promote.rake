@@ -46,6 +46,7 @@ namespace :promote do
     sh("aws s3 cp s3://#{update_bucket_url}/channels/supported/latest.json s3://#{update_bucket_url}/channels/supported/latest.previous.json --cache-control 'max-age=600' --acl public-read")
 
     sh("aws s3 cp s3://#{update_bucket_url}/channels/experimental/latest-#{go_full_version}.json s3://#{update_bucket_url}/channels/supported/latest.json --cache-control 'max-age=600' --acl public-read")
+    sh("aws s3 cp s3://#{update_bucket_url}/channels/experimental/latest-#{go_full_version}.json s3://#{update_bucket_url}/channels/supported/latest-#{go_full_version}.json --cache-control 'max-age=600' --acl public-read")
   end
 
   desc "task to promote addons and their metadata"

@@ -82,7 +82,7 @@ def environmentVariableForAddons = [
 GoCD.script {
   environments {
     environment('internal') {
-      pipelines = ['code-sign', 'upload-addons', 'PublishStableRelease']
+      pipelines = ['code-sign', 'PublishStableRelease']
     }
   }
 

@@ -114,31 +114,6 @@ GoCD.script {
               }
             }
 
-            job('update-business_continuity') {
-              elasticProfileId = 'ecs-gocd-dev-build'
-              tasks {
-                fetchArtifact {
-                  destination = 'codesigning'
-                  file = true
-                  job = 'dist'
-                  pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
-                  source = 'dist/meta/version.json'
-                  stage = 'dist'
-                }
-                exec {
-                  commandLine = ['npm', 'install']
-                  runIf = 'passed'
-                  workingDir = 'codesigning'
-                }
-                exec {
-                  commandLine = ['node', 'lib/bump_gocd_version_business_continuity.js']
-                  runIf = 'passed'
-                  workingDir = 'codesigning'
-                }
-              }
-            }
-
             job('update-installer-testing') {
               elasticProfileId = 'ecs-gocd-dev-build'
               tasks {

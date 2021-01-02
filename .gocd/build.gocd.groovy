@@ -101,10 +101,8 @@ GoCD.script {
           destination = "codesigning"
           blacklist = ["**/*.*", "**/*"]
         }
-        svn('signing-keys') {
-          url = "https://github.com/gocd-private/signing-keys/trunk"
-          username = "gocd-ci-user"
-          password = secretParam("GOCD_CI_USER_TOKEN_WITH_REPO_ACCESS")
+        git('signing-keys') {
+          url = "https://git.gocd.io/git/gocd/signing-keys"
           destination = "signing-keys"
         }
         dependency('installers') {
@@ -392,10 +390,8 @@ GoCD.script {
           destination = "codesigning"
           blacklist = ["**/*.*", "**/*"]
         }
-        svn('signing-keys') {
-          url = "https://github.com/gocd-private/signing-keys/trunk"
-          username = "gocd-ci-user"
-          password = secretParam("GOCD_CI_USER_TOKEN_WITH_REPO_ACCESS")
+        git('signing-keys') {
+          url = "https://git.gocd.io/git/gocd/signing-keys"
           destination = "signing-keys"
         }
         dependency('code-sign') {

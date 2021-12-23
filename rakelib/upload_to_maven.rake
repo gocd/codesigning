@@ -37,7 +37,7 @@ namespace :maven do
     auto_release_to_central = is_experimental ? 'false' : 'true'
 
     %w(go-plugin-api go-plugin-config-repo).each do |artifact_name|
-      pom_content = File.read('./resources/deploy-pom.xml')
+      pom_content = File.read('./resources/pom.xml')
                         .gsub('${goReleaseVersion}', maven_release_version)
                         .gsub('${artifact}', "#{artifact_name}#{artifact_suffix}")
                         .gsub('${desc}', description_for(artifact_name))

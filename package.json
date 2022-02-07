@@ -13,9 +13,17 @@
   },
   "homepage": "https://github.com/gocd/codesigning#readme",
   "private": true,
+  "scripts": {
+    "preinstall": "npm-force-resolutions"
+  },
   "dependencies": {
     "docker-hub-api": "^0.8.0",
-    "request": "^2.88.2",
-    "github-base": "^1.0.0"
+    "github-base": "^1.0.0",
+    "npm-force-resolutions": "^0.0.10",
+    "request": "^2.88.2"
+  },
+  "resolutions": {
+    "lodash": "4.17.21",
+    "parse-link-header": "2.0.0"
   }
 }

@@ -17,7 +17,7 @@
 
     <name>${name}</name>
     <description>${desc}</description>
-    <url>http://gocd.org</url>
+    <url>https://plugin-api.gocd.org/current/</url>
 
     <licenses>
         <license>
@@ -31,14 +31,14 @@
             <name>GoCD Team</name>
             <email>go-cd-dev@googlegroups.com</email>
             <organization>GoCD</organization>
-            <organizationUrl>https://www.gocd.org/</organizationUrl>
+            <organizationUrl>https://gocd.org/</organizationUrl>
         </developer>
     </developers>
 
     <scm>
         <connection>scm:git:https://github.com/gocd/gocd</connection>
         <developerConnection>scm:git:https://github.com/gocd/gocd</developerConnection>
-        <url>https://github.com/gocd/gocd.git</url>
+        <url>https://github.com/gocd/gocd/tree/master/plugin-infra/${name}</url>
     </scm>
 
     <build>

@@ -23,14 +23,6 @@ GoCD.script {
       labelTemplate = '${COUNT}'
       lockBehavior = 'none'
       materials {
-        git('GocdCloud') {
-          branch = 'master'
-          shallowClone = false
-          url = 'https://git.gocd.io/git/gocd/gocd-cloud'
-          destination = 'gocd-cloud'
-          autoUpdate = true
-          blacklist = ["**/*.*", "**/*"]
-        }
         git('GocdChocolatey') {
           branch = 'master'
           shallowClone = true

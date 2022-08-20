@@ -23,6 +23,10 @@ namespace :rpm do
     end
 
     sh("gpg --armor --output GPG-KEY-GOCD-#{Process.pid} --export #{GPG_SIGNING_ID}")
+
+    # FIXME Temporarily allow SHA1 signing. Needs to be moved to SHA256 when we can change our signing key
+    sh("sudo update-crypto-policies --set DEFAULT:SHA1")
+
     sh("sudo rpm --import GPG-KEY-GOCD-#{Process.pid}")
     rm "GPG-KEY-GOCD-#{Process.pid}"
 

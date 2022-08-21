@@ -74,11 +74,6 @@ def environmentVariableForUpdateChannel = [
   AWS_SECRET_ACCESS_KEY: secretParam("AWS_SECRET_ACCESS_KEY_FOR_UPDATE_CHANNEL")
 ]
 
-def environmentVariableForAddons = [
-  AWS_ACCESS_KEY_ID    : secretParam("AWS_ACCESS_KEY_ID_FOR_ADDONS"),
-  AWS_SECRET_ACCESS_KEY: secretParam("AWS_SECRET_ACCESS_KEY_FOR_ADDONS")
-]
-
 GoCD.script {
   environments {
     environment('internal') {

@@ -28,7 +28,7 @@ namespace :win do
       cp f, "#{signing_dir}"
     end
 
-    sign_tool = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool'
+    sign_tool = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64\signtool'
 
     Dir["#{signing_dir}/*.exe"].each do |f|
       sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /t http://timestamp.digicert.com /a "#{f}"})
@@ -56,7 +56,7 @@ namespace :win do
 
     cp path, signed_file
 
-    sign_tool = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool'
+    sign_tool = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64\signtool'
 
     sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /t http://timestamp.digicert.com /a "#{signed_file}"})
     sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /tr http://timestamp.digicert.com /a /fd sha256 /td sha256 /as "#{signed_file}"})

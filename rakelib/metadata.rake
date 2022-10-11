@@ -92,7 +92,7 @@ namespace :metadata do
 
   desc 'create cloud json with experimental'
   task :cloud_json, [:download_bucket_url] do |t, args|
-    require 'aws-sdk'
+    require 'aws-sdk-s3'
     require 'rest-client'
 
     metadata                 = JSON.parse(File.read("#{meta_source_dir}/version.json"))
@@ -171,7 +171,7 @@ namespace :metadata do
   end
 
   task :cleanup_cloud_json, [:download_bucket_url] do |t, args|
-    require 'aws-sdk'
+    require 'aws-sdk-s3'
     require 'rest-client'
 
     download_bucket_url      = args[:download_bucket_url].split('/')[0]

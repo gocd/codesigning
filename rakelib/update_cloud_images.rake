@@ -1,6 +1,6 @@
 task :update_cloud_images do
   require 'time'
-  require 'aws-sdk'
+  require 'aws-sdk-s3'
   require 'rest-client'
   require 'json'
   require_relative '../lib/version_file_reader'

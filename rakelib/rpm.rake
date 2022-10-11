@@ -11,7 +11,7 @@ namespace :rpm do
 
     rm_rf signing_dir
     mkdir_p signing_dir
-    Dir["#{rpm_source_dir}/*.rpm"].each do |f|
+    Dir["#{rpm_source_dir}/*.{rpm,json}"].each do |f|
       cp f, "#{signing_dir}"
     end
 
@@ -34,7 +34,7 @@ namespace :rpm do
       sh("rpm --checksig '#{f}'")
     end
 
-    generate_metadata_for_single_dir signing_dir, '*.rpm', :rpm
+    generate_metadata_for_single_dir signing_dir, '*.rpm', :rpm, { architecture: 'all', jre: { included: false } }
   end
 
   desc "upload the rpm binaries, after signing the binaries"

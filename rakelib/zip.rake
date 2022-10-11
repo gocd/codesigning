@@ -13,7 +13,7 @@ namespace :zip do
 
     rm_rf signing_dir
     mkdir_p signing_dir
-    Dir["#{zip_source_dir}/*.zip"].each do |f|
+    Dir["#{zip_source_dir}/*.{zip,json}"].each do |f|
       cp f, "#{signing_dir}"
     end
 
@@ -24,7 +24,7 @@ namespace :zip do
       end
     end
 
-    generate_metadata_for_single_dir signing_dir, "*.zip", :generic
+    generate_metadata_for_single_dir signing_dir, "*.zip", :generic, { architecture: 'all', jre: { included: false } }
   end
 
   desc "upload the zip binaries, after signing the binaries"

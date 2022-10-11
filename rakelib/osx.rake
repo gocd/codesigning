@@ -14,7 +14,7 @@ namespace :osx do
 
     rm_rf signing_dir
     mkdir_p signing_dir
-    Dir["#{osx_source_dir}/*.zip"].each do |f|
+    Dir["#{osx_source_dir}/*.{zip,json}"].each do |f|
       cp f, "#{signing_dir}"
     end
 
@@ -27,7 +27,7 @@ namespace :osx do
 
     rm_rf 'tmp'
 
-    generate_metadata_for_single_dir signing_dir, '*.zip', :osx
+    generate_metadata_for_single_dir signing_dir, '*.zip', :osx, { architecture: 'x64', jre: { included: true } }
   end
 
   desc "upload the osx binaries, after signing the binaries"

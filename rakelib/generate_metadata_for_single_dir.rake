@@ -6,7 +6,7 @@ def load_package_metadata(metadata_file)
   end
 end
 
-def generate_metadata_for_single_dir(signing_dir, glob, metadata_key, default_package_meta)
+def generate_metadata_for_single_dir(signing_dir, glob, metadata_key, default_package_meta = {})
   cd signing_dir do
     metadata = {}
     Dir[glob].each do |each_file|

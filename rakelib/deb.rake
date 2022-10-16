@@ -18,7 +18,7 @@ namespace :deb do
 
     rm_rf signing_dir
     mkdir_p signing_dir
-    Dir["#{deb_source_dir}/*.deb"].each do |f|
+    Dir["#{deb_source_dir}/*.{deb,json}"].each do |f|
       cp f, "#{signing_dir}"
     end
 
@@ -36,7 +36,7 @@ namespace :deb do
       sh("dpkg-sig --verbose --verify '#{f}'")
     end
 
-    generate_metadata_for_single_dir signing_dir, '*.deb', :deb
+    generate_metadata_for_single_dir signing_dir, '*.deb', :deb, { architecture: 'all', jre: { included: false } }
   end
 
   desc "upload the deb binaries, after signing the binaries"

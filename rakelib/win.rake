@@ -24,7 +24,7 @@ namespace :win do
 
     rm_rf signing_dir
     mkdir_p signing_dir
-    Dir["#{win_source_dir}/*.exe"].each do |f|
+    Dir["#{win_source_dir}/*.{exe,json}"].each do |f|
       cp f, "#{signing_dir}"
     end
 
@@ -38,39 +38,7 @@ namespace :win do
       sh(%Q{"#{sign_tool}" verify /debug /v /a /pa /hash sha256 "#{f}"})
     end
 
-    generate_metadata_for_single_dir signing_dir, '*.exe', :win
-  end
-
-  desc "sign a single windows binary"
-  task :sign_single_binary, [:path, :dest_archive] => [:setup] do |task, args|
-    path = args[:path]
-    dest_archive = File.expand_path(args[:dest_archive] || "#{File.basename(path)}.zip")
-
-    fail "You must specify a path to sign" if path.nil?
-    fail "Path #{path} does not exists"  unless File.exist?(path)
-    fail "Path must be a file, not a directory" if File.directory?(path)
-
-    dest_dir = File.dirname(dest_archive)
-    work_dir = ensure_clean_dir(File.join("tmp", SecureRandom.hex))
-    signed_file = File.join(work_dir, File.basename(path))
-
-    cp path, signed_file
-
-    sign_tool = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64\signtool'
-
-    sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /t http://timestamp.digicert.com /a "#{signed_file}"})
-    sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /tr http://timestamp.digicert.com /a /fd sha256 /td sha256 /as "#{signed_file}"})
-
-    sh(%Q{"#{sign_tool}" verify /debug /v /a /pa /hash sha1 "#{signed_file}"})
-    sh(%Q{"#{sign_tool}" verify /debug /v /a /pa /hash sha256 "#{signed_file}"})
-
-    File.utime(0, 0, signed_file)
-
-    cd work_dir do
-      sh("jar -cMf #{dest_archive} .")
-    end
-
-    generate_metadata_for_single_dir dest_dir, '*.zip', :osx
+    generate_metadata_for_single_dir signing_dir, '*.exe', :win, { architecture: 'x64', jre: { included: true } }
   end
 
   desc "upload the win binaries, after signing the binaries"

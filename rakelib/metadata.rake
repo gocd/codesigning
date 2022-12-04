@@ -103,7 +103,7 @@ namespace :metadata do
         go_version:            full_version,
         release_time_readable: release_time.xmlschema,
         release_time:          release_time.to_i,
-        server_docker:         [{image_name: 'gocd-server'}, {image_name: 'gocd-server-centos-8'}, {image_name: 'gocd-server-centos-9'}],
+        server_docker:         [{image_name: 'gocd-server'}, {image_name: 'gocd-server-centos-9'}],
         agents_docker:         docker_agents(full_version)
     }
 

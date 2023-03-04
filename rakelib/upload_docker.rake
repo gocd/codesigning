@@ -99,7 +99,7 @@ namespace :docker do
 
   def load_image_locally(image, type)
     if image["format"] == 'oci'
-      oci_folder = "docker-#{type}/oci-#{image.image.gsub('.', '-')}"
+      oci_folder = "docker-#{type}/oci-#{image["image"].gsub('.', '-')}"
       source_image = "ocidir://#{oci_folder}:#{image["tag"]}"
       sh("regctl image import #{source_image} docker-#{type}/#{image["file"]}")
     else

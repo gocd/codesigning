@@ -8,11 +8,14 @@ namespace :docker do
     stable_org = ENV['STABLE_DOCKERHUB_ORG'] || 'gocd'
 
     org = exp ? experimental_org : stable_org
-    sh("docker tag #{source_image} #{org}/#{destination_image}")
 
-    sh("docker push #{org}/#{destination_image}")
-
-    sh("docker rmi #{source_image} #{org}/#{destination_image}")
+    if source_image =~ /ocidir/
+      sh("regctl image copy #{source_image} #{org}/#{destination_image}")
+    else
+      sh("docker tag #{source_image} #{org}/#{destination_image}")
+      sh("docker push #{org}/#{destination_image}")
+      sh("docker rmi #{source_image} #{org}/#{destination_image}")
+    end
   end
 
   def get_docker_hub_name(image_name, type)
@@ -40,7 +43,7 @@ namespace :docker do
 
   end
 
-  desc "Upload all docker images to dockerhub"
+  desc "Upload experimental docker images to dockerhub"
   task :upload_experimental_docker_images => :dockerhub_login do
 
     %w[agent server].each do |type|
@@ -54,9 +57,8 @@ namespace :docker do
         metadata = JSON.parse(File.read(manifest))
 
         metadata.each { |image|
-          sh("cat docker-#{type}/#{image["file"]} | gunzip | docker load -q")
 
-          source_image = "#{image["imageName"]}:#{image["tag"]}"
+          source_image = load_image_locally(image, type)
           destination_image = "#{get_docker_hub_name(image["imageName"], type)}:#{image["tag"]}"
 
           push_to_dockerhub(source_image, destination_image, true)
@@ -66,7 +68,7 @@ namespace :docker do
 
   end
 
-  desc 'Publish docker images to hub'
+  desc 'Publish official/released docker images to dockerhub'
   task :publish_docker_images => :dockerhub_login do
 
     metadata = JSON.parse(File.read("version.json"))
@@ -83,9 +85,8 @@ namespace :docker do
         metadata = JSON.parse(File.read(manifest))
 
         metadata.each { |image|
-          sh("cat docker-#{type}/#{image["file"]} | gunzip | docker load -q")
 
-          source_image = "#{image["imageName"]}:#{image["tag"]}"
+          source_image = load_image_locally(image, type)
           destination_image = "#{get_docker_hub_name(image["imageName"], type)}:v#{go_version}"
 
           push_to_dockerhub(source_image, destination_image, false)
@@ -95,6 +96,18 @@ namespace :docker do
   end
 
   private
+
+  def load_image_locally(image, type)
+    if image["format"] == 'oci'
+      oci_folder = "docker-#{type}/oci-#{image.image.gsub('.', '-')}"
+      source_image = "ocidir://#{oci_folder}:#{image["tag"]}"
+      sh("regctl image import #{source_image} docker-#{type}/#{image["file"]}")
+    else
+      sh("cat docker-#{type}/#{image["file"]} | docker load -q")
+      source_image = "#{image["imageName"]}:#{image["tag"]}"
+    end
+    source_image
+  end
 
   def env(key)
     value = ENV[key].to_s.strip

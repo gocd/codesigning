@@ -9,13 +9,7 @@ namespace :docker do
 
     org = exp ? experimental_org : stable_org
 
-    if source_image =~ /ocidir/
-      sh("regctl image copy #{source_image} #{org}/#{destination_image}")
-    else
-      sh("docker tag #{source_image} #{org}/#{destination_image}")
-      sh("docker push #{org}/#{destination_image}")
-      sh("docker rmi #{source_image} #{org}/#{destination_image}")
-    end
+    sh("regctl image copy #{source_image} #{org}/#{destination_image}")
   end
 
   def get_docker_hub_name(image_name, type)
@@ -98,14 +92,9 @@ namespace :docker do
   private
 
   def load_image_locally(image, type)
-    if image["format"] == 'oci'
-      oci_folder = "docker-#{type}/oci-#{image["imageName"].gsub('.', '-')}"
-      source_image = "ocidir://#{oci_folder}:#{image["tag"]}"
-      sh("regctl image import #{source_image} docker-#{type}/#{image["file"]}")
-    else
-      sh("cat docker-#{type}/#{image["file"]} | docker load -q")
-      source_image = "#{image["imageName"]}:#{image["tag"]}"
-    end
+    oci_folder = "docker-#{type}/oci-#{image["imageName"].gsub('.', '-')}"
+    source_image = "ocidir://#{oci_folder}:#{image["tag"]}"
+    sh("regctl image import #{source_image} docker-#{type}/#{image["file"]}")
     source_image
   end
 

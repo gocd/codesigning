@@ -3,24 +3,6 @@ require 'base64'
 
 namespace :docker do
 
-  def push_to_dockerhub(source_image, destination_image, exp = true)
-    experimental_org = ENV['EXP_DOCKERHUB_ORG'] || 'gocdexperimental'
-    stable_org = ENV['STABLE_DOCKERHUB_ORG'] || 'gocd'
-
-    org = exp ? experimental_org : stable_org
-
-    sh("regctl image copy #{source_image} #{org}/#{destination_image}")
-  end
-
-  def get_docker_hub_name(image_name, type)
-    if type.to_s === "server" && image_name.include?('docker-')
-      return image_name.gsub! "docker-", ""
-    else
-      return image_name
-    end
-    raise "Invalid type: #{type}"
-  end
-
   task :dockerhub_login do
     creds = {
       :auths => {
@@ -96,6 +78,24 @@ namespace :docker do
     source_image = "ocidir://#{oci_folder}:#{image["tag"]}"
     sh("regctl image import #{source_image} docker-#{type}/#{image["file"]}")
     source_image
+  end
+
+  def push_to_dockerhub(source_image, destination_image, exp = true)
+    experimental_org = ENV['EXP_DOCKERHUB_ORG'] || 'gocdexperimental'
+    stable_org = ENV['STABLE_DOCKERHUB_ORG'] || 'gocd'
+
+    org = exp ? experimental_org : stable_org
+
+    sh("regctl image copy #{source_image} #{org}/#{destination_image}")
+  end
+
+  def get_docker_hub_name(image_name, type)
+    if type.to_s === "server" && image_name.include?('docker-')
+      return image_name.gsub! "docker-", ""
+    else
+      return image_name
+    end
+    raise "Invalid type: #{type}"
   end
 
   def env(key)

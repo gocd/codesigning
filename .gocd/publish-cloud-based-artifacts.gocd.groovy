@@ -221,7 +221,7 @@ GoCD.script {
                 }
               }
             }
-            job('update_amis') {
+            job('update_cloud_images') {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = amisRegion + [
                 DOCKERHUB_ORG: 'gocd',

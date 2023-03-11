@@ -17,7 +17,7 @@ namespace :promote do
 
     sh("aws s3 cp s3://#{experimental_bucket_url}/binaries/#{go_full_version}/latest.json out/latest.json")
 
-    sh("aws s3 sync s3://#{experimental_bucket_url}/binaries/#{go_full_version} s3://#{stable_bucket_url}/binaries/#{go_full_version} --acl public-read --cache-control 'max-age=31536000'")
+    sh("aws s3 sync s3://#{experimental_bucket_url}/binaries/#{go_full_version} s3://#{stable_bucket_url}/binaries/#{go_full_version} --copy-props none --acl public-read --cache-control 'max-age=31536000'")
   end
 
   desc "task to promote artifacts to update bucket"

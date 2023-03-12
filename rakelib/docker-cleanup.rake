@@ -3,6 +3,8 @@ task :cleanup_docker do
   dockerhub_username = env("DOCKERHUB_USERNAME")
   dockerhub_password = env("DOCKERHUB_PASSWORD")
   org = env("DOCKERHUB_ORG")
+  batch_size = 100
+  keep_most_recent_tags = 1
 
   raise "ORG can't be `gocd`! We can't delete the official stable images." if org.eql?("gocd")
 
@@ -15,22 +17,27 @@ task :cleanup_docker do
   response = RestClient.get("https://hub.docker.com/v2/repositories/#{org}/?page_size=50", {:accept => 'application/json', :Authorization => "JWT #{token}"})
   all_repos = JSON.parse(response)
 
-  agents = all_repos['results'].map do |repo|
+  repos = all_repos['results'].map do |repo|
     repo['name'] if (repo['name'].start_with?('gocd-agent-') && repo['name'] != 'gocd-agent-deprecated') || repo['name'].start_with?('gocd-server')
   end
 
-  agents.compact.each do |repo|
-    list_all_tags = RestClient.get("https://hub.docker.com/v2/repositories/#{org}/#{repo}/tags?page_size=50", {:accept => 'application/json', :Authorization => "JWT #{token}"})
-    tags = JSON.parse(list_all_tags)['results'].map() { |result| result['name'] }
+  repos.compact.each do |repo|
+    tags = nil
 
-    # sort the tags in a reverse order of version and not deleting the most recent experimental tag
-    tags = tags.sort.reverse.drop(1)
+    # Keep going until we are not dealing with a full batch
+    until tags != nil && tags.length + keep_most_recent_tags < batch_size do
+      list_all_tags = RestClient.get("https://hub.docker.com/v2/repositories/#{org}/#{repo}/tags?page_size=#{batch_size}", {:accept => 'application/json', :Authorization => "JWT #{token}"})
+      tags = JSON.parse(list_all_tags)['results'].map() { |result| result['name'] }
 
-    puts "Deleting tags: #{tags}"
+      # sort the tags in a reverse order of version and not deleting the most recent experimental tag
+      tags = tags.sort.reverse.drop(keep_most_recent_tags)
 
-    tags.each do |tag|
-      delete_tag = RestClient.delete("https://hub.docker.com/v2/repositories/#{org}/#{repo}/tags/#{tag}/", {:accept => 'application/json', :Authorization => "JWT #{token}"})
-      puts "Response for #{tag}: #{delete_tag}"
+      puts "Deleting #{tags.length} tags for #{org}/#{repo}: #{tags}"
+
+      tags.each do |tag|
+        delete_tag = RestClient.delete("https://hub.docker.com/v2/repositories/#{org}/#{repo}/tags/#{tag}/", {:accept => 'application/json', :Authorization => "JWT #{token}"})
+        puts "Response for #{tag}: #{delete_tag}"
+      end
     end
   end
 

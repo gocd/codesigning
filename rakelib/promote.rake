@@ -28,9 +28,9 @@ namespace :promote do
     meta_source_dir = 'src/meta'
     go_full_version = JSON.parse(File.read("#{meta_source_dir}/version.json"))['go_full_version']
 
-    sh("aws s3 cp s3://#{update_bucket_url}/channels/supported/latest.json s3://#{update_bucket_url}/channels/supported/latest.previous.json --copy-props none --acl public-read --cache-control 'max-age=600'")
+    sh("aws s3 cp s3://#{update_bucket_url}/channels/supported/latest.json s3://#{update_bucket_url}/channels/supported/latest.previous.json --copy-props none --acl public-read --cache-control 'max-age=600' --content-type 'application/json'")
 
-    sh("aws s3 cp s3://#{update_bucket_url}/channels/experimental/latest-#{go_full_version}.json s3://#{update_bucket_url}/channels/supported/latest.json --copy-props none --acl public-read --cache-control 'max-age=600'")
-    sh("aws s3 cp s3://#{update_bucket_url}/channels/experimental/latest-#{go_full_version}.json s3://#{update_bucket_url}/channels/supported/latest-#{go_full_version}.json --copy-props none --acl public-read --cache-control 'max-age=600'")
+    sh("aws s3 cp s3://#{update_bucket_url}/channels/experimental/latest-#{go_full_version}.json s3://#{update_bucket_url}/channels/supported/latest.json --copy-props none --acl public-read --cache-control 'max-age=600' --content-type 'application/json'")
+    sh("aws s3 cp s3://#{update_bucket_url}/channels/experimental/latest-#{go_full_version}.json s3://#{update_bucket_url}/channels/supported/latest-#{go_full_version}.json --copy-props none --acl public-read --cache-control 'max-age=600' --content-type 'application/json'")
   end
 end

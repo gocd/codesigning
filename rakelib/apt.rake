@@ -27,7 +27,7 @@ namespace :apt do
 
     %w(GOCD-GPG-KEY.asc InRelease Packages Packages.bz2 Packages.gz Release Release.gpg).each do |f|
       # low cache ttl
-      sh("aws s3 cp #{signing_dir}/#{f} s3://#{bucket_url}/#{f} --acl public-read --cache-control 'max-age=600'")
+      sh("aws s3 cp #{'--no-progress' unless $stdin.tty?} #{signing_dir}/#{f} s3://#{bucket_url}/#{f} --acl public-read --cache-control 'max-age=600'")
     end
   end
 end

@@ -44,7 +44,7 @@ namespace :metadata do
 
     target_dir = Pathname.new('target')
 
-    sh("aws s3 sync --exclude='*' --include '*/metadata.json' s3://#{bucket_url} #{target_dir.join('repo')}")
+    sh("aws s3 sync #{'--no-progress' unless $stdin.tty?} --exclude='*' --include '*/metadata.json' s3://#{bucket_url} #{target_dir.join('repo')}")
 
     json = Dir["#{target_dir.join('repo', 'binaries', '*', 'metadata.json')}"].sort.collect {|file|
       JSON.parse(File.read(file))
@@ -54,7 +54,7 @@ namespace :metadata do
       file.write(JSON.generate(json))
     end
 
-    sh("aws s3 cp #{target_dir.join('repo', 'releases.json')} s3://#{bucket_url}/releases.json --acl public-read --cache-control 'max-age=600'")
+    sh("aws s3 cp #{'--no-progress' unless $stdin.tty?} #{target_dir.join('repo', 'releases.json')} s3://#{bucket_url}/releases.json --acl public-read --cache-control 'max-age=600'")
   end
 
   desc "aggregate metadata for this release for all binaries"

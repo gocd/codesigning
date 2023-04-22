@@ -31,20 +31,6 @@ def cleanTasks = {
       workingDir = 'codesigning'
     })
   ]
-
-}
-def createRakeTask = { String osType ->
-  return new ExecTask({
-    commandLine = ["rake", "--trace", "${osType}:sign"]
-    workingDir = 'codesigning'
-  })
-}
-
-def publishArtifactTask = { String osType ->
-  return new BuildArtifact('build', {
-    source = "codesigning/out"
-    destination = "out"
-  })
 }
 
 def getArtifact = { String source1 ->

@@ -1,8 +1,3 @@
-def amisRegion = [
-  REGION                     : 'us-east-2',
-  EXTRA_AMI_REGION_TO_COPY_TO: 'us-east-1'
-]
-
 def secretParam = { String param ->
   return "{{SECRET:[build-pipelines][$param]}}".toString()
 }
@@ -66,7 +61,7 @@ GoCD.script {
               environmentVariables = [
                 DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USER"),
                 DOCKERHUB_PASSWORD: secretParam("DOCKERHUB_PASS"),
-                DOCKERHUB_TOKEN: secretParam("DOCKERHUB_TOKEN")
+                DOCKERHUB_TOKEN   : secretParam("DOCKERHUB_TOKEN")
               ]
               tasks {
                 fetchArtifact {
@@ -223,11 +218,12 @@ GoCD.script {
             }
             job('update_cloud_images') {
               elasticProfileId = 'ecs-gocd-dev-build'
-              environmentVariables = amisRegion + [
-                DOCKERHUB_ORG: 'gocd',
+              environmentVariables = [
+                REGION            : 'us-east-2',
+                DOCKERHUB_ORG     : 'gocd',
                 DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USER"),
                 DOCKERHUB_PASSWORD: secretParam("DOCKERHUB_PASS"),
-                DOCKERHUB_TOKEN: secretParam("DOCKERHUB_TOKEN")
+                DOCKERHUB_TOKEN   : secretParam("DOCKERHUB_TOKEN")
               ]
               tasks {
                 fetchArtifact {
@@ -249,10 +245,10 @@ GoCD.script {
             job('docker_cleanup') {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = [
-                DOCKERHUB_ORG: 'gocdexperimental',
+                DOCKERHUB_ORG     : 'gocdexperimental',
                 DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USER"),
                 DOCKERHUB_PASSWORD: secretParam("DOCKERHUB_PASS"),
-                DOCKERHUB_TOKEN: secretParam("DOCKERHUB_TOKEN")
+                DOCKERHUB_TOKEN   : secretParam("DOCKERHUB_TOKEN")
               ]
               tasks {
                 exec {
@@ -265,10 +261,10 @@ GoCD.script {
             job('update_dockerhub_full_description') {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = [
-                DOCKERHUB_ORG: 'gocdexperimental',
+                DOCKERHUB_ORG     : 'gocdexperimental',
                 DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USER"),
                 DOCKERHUB_PASSWORD: secretParam("DOCKERHUB_PASS"),
-                DOCKERHUB_TOKEN: secretParam("DOCKERHUB_TOKEN")
+                DOCKERHUB_TOKEN   : secretParam("DOCKERHUB_TOKEN")
               ]
               tasks {
                 fetchArtifact {

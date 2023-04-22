@@ -391,6 +391,10 @@ GoCD.script {
           pipeline = 'code-sign'
           stage = 'metadata'
         }
+        dependency('installer-tests') {
+          pipeline = 'installer-tests'
+          stage = 'install-tests'
+        }
       }
 
       stages {

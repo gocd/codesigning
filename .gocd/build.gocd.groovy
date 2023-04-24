@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+import cd.go.contrib.plugins.configrepo.groovy.dsl.ExecTask
+import cd.go.contrib.plugins.configrepo.groovy.dsl.FetchArtifactTask
+import cd.go.contrib.plugins.configrepo.groovy.dsl.GoCD
+
 def fetchArtifactTask = { String osType ->
   return new FetchArtifactTask(false, {
     pipeline = 'installers'

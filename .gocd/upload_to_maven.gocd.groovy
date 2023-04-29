@@ -37,6 +37,7 @@ GoCD.script {
         git('signing-keys') {
           url = "https://git.gocd.io/git/gocd/signing-keys"
           destination = "signing-keys"
+          blacklist = ["**/*.*", "**/*"]
         }
         git('CodeSigning') {
           branch = 'master'

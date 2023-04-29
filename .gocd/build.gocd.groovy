@@ -89,6 +89,7 @@ GoCD.script {
         git('signing-keys') {
           url = "https://git.gocd.io/git/gocd/signing-keys"
           destination = "signing-keys"
+          blacklist = ["**/*.*", "**/*"]
         }
         dependency('installers') {
           pipeline = 'installers'
@@ -376,6 +377,7 @@ GoCD.script {
         git('signing-keys') {
           url = "https://git.gocd.io/git/gocd/signing-keys"
           destination = "signing-keys"
+          blacklist = ["**/*.*", "**/*"]
         }
         dependency('code-sign') {
           pipeline = 'code-sign'

@@ -30,7 +30,7 @@ namespace :win do
     end
     
     Dir["#{signing_dir}/*.exe"].each do |f|
-      sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /t http://timestamp.digicert.com /a /fd sha1 /td sha1 "#{f}"})
+      sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /t http://timestamp.digicert.com /a /fd sha1 "#{f}"})
       sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /tr http://timestamp.digicert.com /a /fd sha256 /td sha256 /as "#{f}"})
 
       sh(%Q{"#{sign_tool}" verify /debug /v /a /pa /hash sha1 "#{f}"})
@@ -55,7 +55,7 @@ namespace :win do
 
     cp path, signed_file
 
-    sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /t http://timestamp.digicert.com /a /fd sha1 /td sha1 "#{signed_file}"})
+    sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /t http://timestamp.digicert.com /a /fd sha1 "#{signed_file}"})
     sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /tr http://timestamp.digicert.com /a /fd sha256 /td sha256 /as "#{signed_file}"})
 
     sh(%Q{"#{sign_tool}" verify /debug /v /a /pa /hash sha1 "#{signed_file}"})

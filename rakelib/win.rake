@@ -4,7 +4,7 @@ namespace :win do
   signing_dir = "out/win"
   win_source_dir = 'src/win'
   meta_source_dir = 'src/meta'
-  sign_tool = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Windows Kits\11\bin\10.0.22621.755\x64\signtool'
+  sign_tool = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\signtool'
 
   # assumes the following:
   # - File `../signing-keys/windows-code-sign.p12.gpg` containing the encrypted p12/pfx codesigning key

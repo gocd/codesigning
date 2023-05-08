@@ -1,9 +1,10 @@
 # make sure deps are installed using
-# `choco install gpg4win windows-sdk-8.0`
+# `choco install gnupg && choco install windows-sdk-11-version-22h2-all --install-arguments='/features OptionId.SigningTools /ceip off'`
 namespace :win do
   signing_dir = "out/win"
   win_source_dir = 'src/win'
   meta_source_dir = 'src/meta'
+  sign_tool = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Windows Kits\11\bin\10.0.22621.2\x64\signtool'
 
   # assumes the following:
   # - File `../signing-keys/windows-code-sign.p12.gpg` containing the encrypted p12/pfx codesigning key
@@ -27,9 +28,7 @@ namespace :win do
     Dir["#{win_source_dir}/*.{exe,json}"].each do |f|
       cp f, "#{signing_dir}"
     end
-
-    sign_tool = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64\signtool'
-
+    
     Dir["#{signing_dir}/*.exe"].each do |f|
       sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /t http://timestamp.digicert.com /a "#{f}"})
       sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /tr http://timestamp.digicert.com /a /fd sha256 /td sha256 /as "#{f}"})
@@ -55,8 +54,6 @@ namespace :win do
     signed_file = File.join(work_dir, File.basename(path))
 
     cp path, signed_file
-
-    sign_tool = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64\signtool'
 
     sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /t http://timestamp.digicert.com /a "#{signed_file}"})
     sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /tr http://timestamp.digicert.com /a /fd sha256 /td sha256 /as "#{signed_file}"})

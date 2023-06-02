@@ -2,7 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     aws-eventstream (1.2.0)
-    aws-partitions (1.772.0)
+    aws-partitions (1.773.0)
     aws-sdk-core (3.174.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
@@ -49,9 +49,9 @@ GEM
     unf_ext (0.0.8.2)
 
 PLATFORMS
-  arm64-darwin-21
+  arm64-darwin
   ruby
-  x86_64-darwin-21
+  x86_64-darwin
   x86_64-linux
 
 DEPENDENCIES
@@ -61,4 +61,4 @@ DEPENDENCIES
   rest-client
 
 BUNDLED WITH
-   2.4.7
+   2.4.13

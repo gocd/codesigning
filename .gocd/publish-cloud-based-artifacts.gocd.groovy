@@ -161,7 +161,7 @@ GoCD.script {
                   workingDir = "gocd-chocolatey"
                 }
                 exec {
-                  commandLine = ['powershell', '$env:version=(Get-Content \'..\\version.json\' | ConvertFrom-Json).go_version; choco push gocd-server\\gocdserver.$env:version.nupkg -k $env:apiKey']
+                  commandLine = ['powershell', '$env:version=(Get-Content \'..\\version.json\' | ConvertFrom-Json).go_version; choco push gocd-server\\gocdserver.$env:version.nupkg -k $env:apiKey --source https://push.chocolatey.org/']
                   runIf = 'passed'
                   workingDir = "gocd-chocolatey"
                 }
@@ -194,7 +194,7 @@ GoCD.script {
                   workingDir = "gocd-chocolatey"
                 }
                 exec {
-                  commandLine = ['powershell', '$env:version=(Get-Content \'..\\version.json\' | ConvertFrom-Json).go_version; choco push gocd-agent\\gocdagent.$env:version.nupkg -k $env:apiKey']
+                  commandLine = ['powershell', '$env:version=(Get-Content \'..\\version.json\' | ConvertFrom-Json).go_version; choco push gocd-agent\\gocdagent.$env:version.nupkg -k $env:apiKey --source https://push.chocolatey.org/']
                   runIf = 'passed'
                   workingDir = "gocd-chocolatey"
                 }

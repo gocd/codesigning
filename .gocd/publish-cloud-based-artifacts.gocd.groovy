@@ -129,6 +129,10 @@ GoCD.script {
                   workingDir = "codesigning"
                 }
                 bash {
+                  commandString = "sed -i 's/(distroVersion.eol/(!project.hasProperty(\"skipDockerBuild\") \\&\\& distroVersion.eol/' buildSrc/src/main/groovy/com/thoughtworks/go/build/docker/BuildDockerImageTask.groovy"
+                  workingDir = 'gocd'
+                }
+                bash {
                   commandString = './gradlew --parallel --max-workers 4 docker:assemble -PskipDockerBuild -PdockerbuildServerZipLocation=\$(readlink -f zip/go-server-*.zip) -PdockerbuildAgentZipLocation=\$(readlink -f zip/go-agent-*.zip) -PdockerGitPush="I_REALLY_WANT_TO_DO_THIS"'
                   workingDir = 'gocd'
                 }

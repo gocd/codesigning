@@ -37,7 +37,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.15.4-x86_64-linux)
       racc (~> 1.4)
-    racc (1.7.1)
+    racc (1.7.2)
     rake (13.1.0)
     rest-client (2.1.0)
       http-accept (>= 1.7.0, < 2.0)

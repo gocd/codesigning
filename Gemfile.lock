@@ -52,9 +52,9 @@ PLATFORMS
 
 DEPENDENCIES
   aws-sdk-s3
-  nokogiri (~> 1.16)
+  nokogiri
   rake
   rest-client
 
 BUNDLED WITH
-   2.4.17
+   2.5.6

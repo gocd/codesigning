@@ -71,7 +71,6 @@ def docker_agents(version)
     all_tags = JSON.parse(tags_response)['results'].map { |tag| tag['name'] }
     {image_name: repo['name']} if (repo['name'].start_with?('gocd-agent-') && repo['name'] != 'gocd-agent-deprecated' && all_tags.include?("v#{version}"))
   end
-  logout = RestClient.post('https://hub.docker.com/v2/logout/', {}, {:accept => 'application/json', :Authorization => "JWT #{token}"})
   agents.compact.sort_by { |agent| agent[:image_name] }
 end
 

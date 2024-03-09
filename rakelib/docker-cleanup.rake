@@ -40,8 +40,6 @@ task :cleanup_docker do
       end
     end
   end
-
-  logout = RestClient.post('https://hub.docker.com/v2/logout/', {}, {:accept => 'application/json', :Authorization => "JWT #{token}"})
 end
 
 private

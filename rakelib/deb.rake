@@ -37,7 +37,7 @@ namespace :deb do
     rm "GPG-KEY-GOCD-#{Process.pid}"
 
     File.write(
-      "#{debsig_policies_folder}/debsig-verify-policy.xml",
+      "#{debsig_policies_folder}/debsig-verify-policy.pol",
       ERB.new(File.read('rake_lib/debsig-verify-policy.xml.erb')).result(binding)
     )
 

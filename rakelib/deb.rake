@@ -43,7 +43,7 @@ namespace :deb do
 
     # FIXME Temporarily allow SHA1 signing. Needs to be moved to SHA256 when we can change our signing key
     # See https://github.com/gocd/gocd/issues/10722
-    File.write("#{GNUPGHOME}/gpg.conf", "personal-digest-preferences SHA512 SHA384 SHA256 SHA224 SHA1")
+    File.write("#{ENV['GNUPGHOME']}/gpg.conf", "personal-digest-preferences SHA512 SHA384 SHA256 SHA224 SHA1")
 
     Dir["#{signing_dir}/*.deb"].each do |f|
       sh("debsig-verify --verbose --policies-dir '#{Dir.pwd}/debsig/policies' --keyrings-dir '#{Dir.pwd}/debsig/keyrings' '#{f}'")

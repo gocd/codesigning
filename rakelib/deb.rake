@@ -1,5 +1,5 @@
 # make sure deps are installed using
-# `apt-get install -y debsigs gnupg gnupg-agent dpkg-sig apt-utils bzip2 gzip unzip zip rake sudo`
+# `apt-get install -y debsigs debsig-verify gnupg gnupg-agent apt-utils bzip2 gzip unzip zip rake sudo`
 # `echo "go ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/go`
 namespace :deb do
   signing_dir     = "out/deb"
@@ -24,7 +24,7 @@ namespace :deb do
 
     cd signing_dir do
       Dir["*.deb"].each do |f|
-        sh("dpkg-sig --verbose --sign builder -k '#{GPG_SIGNING_ID}' '#{f}'")
+        sh("debsigs --verbose --sign=builder --default-key='#{GPG_SIGNING_ID}' '#{f}'")
       end
     end
 
@@ -33,7 +33,7 @@ namespace :deb do
     rm "GPG-KEY-GOCD-#{Process.pid}"
 
     Dir["#{signing_dir}/*.deb"].each do |f|
-      sh("dpkg-sig --verbose --verify '#{f}'")
+      sh("debsig-verify --verbose '#{f}'")
     end
 
     generate_metadata_for_single_dir signing_dir, '*.deb', :deb, { architecture: 'all', jre: { included: false } }

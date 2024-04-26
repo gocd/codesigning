@@ -41,7 +41,6 @@ namespace :deb do
       ERB.new(File.read('rakelib/debsig-verify-policy.xml.erb')).result(binding)
     )
 
-    puts File.read("/etc/gnupg/gpg.conf")
     puts File.read("~/.gnupg/gpg.conf")
 
     Dir["#{signing_dir}/*.deb"].each do |f|

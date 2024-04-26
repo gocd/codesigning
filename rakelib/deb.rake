@@ -31,11 +31,11 @@ namespace :deb do
     end
 
     # Verify the signature with (the very painful) debsig-verify
-    debsig_keyring_folder = "/usr/share/debsig/keyrings/#{GPG_SIGNING_ID}"
-    debsig_policies_folder = "/etc/debsig/policies/#{GPG_SIGNING_ID}"
-    sh("sudo mkdir -p #{debsig_keyring_folder} #{debsig_policies_folder}")
+    debsig_policies_folder = "debsig/policies/#{GPG_SIGNING_ID}"
+    debsig_keyring_folder = "debsig/keyrings/#{GPG_SIGNING_ID}"
+    sh("mkdir -p #{debsig_policies_folder} #{debsig_keyring_folder}")
     sh("gpg --armor --output GPG-KEY-GOCD-#{Process.pid} --export #{GPG_SIGNING_ID}")
-    sh("sudo gpg --no-default-keyring --keyring #{debsig_keyring_folder}/debsig.gpg --import GPG-KEY-GOCD-#{Process.pid}")
+    sh("gpg --no-default-keyring --keyring #{debsig_keyring_folder}/debsig.gpg --import GPG-KEY-GOCD-#{Process.pid}")
     rm "GPG-KEY-GOCD-#{Process.pid}"
 
     File.write(
@@ -44,7 +44,7 @@ namespace :deb do
     )
 
     Dir["#{signing_dir}/*.deb"].each do |f|
-      sh("debsig-verify --verbose '#{f}'")
+      sh("debsig-verify --verbose --policies-dir '#{debsig_policies_folder}' --keyrings-dir '#{debsig_keyring_folder}' '#{f}'")
     end
 
     generate_metadata_for_single_dir signing_dir, '*.deb', :deb, { architecture: 'all', jre: { included: false } }

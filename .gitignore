@@ -1,6 +1,7 @@
 out/
 src/
 tmp/
+debsig/
 .idea/
 *.iml
 gocd-groovy-dsl-config-plugin-*.jar

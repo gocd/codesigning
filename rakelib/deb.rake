@@ -34,16 +34,12 @@ namespace :deb do
     debsig_policies_folder = "debsig/policies/#{GPG_SIGNING_ID}"
     debsig_keyring_folder = "debsig/keyrings/#{GPG_SIGNING_ID}"
     sh("mkdir -p #{debsig_policies_folder} #{debsig_keyring_folder}")
-    sh("gpg --armor --output GPG-KEY-GOCD-#{Process.pid} --export #{GPG_SIGNING_ID}")
-    sh("gpg --no-default-keyring --keyring #{debsig_keyring_folder}/debsig.gpg --import GPG-KEY-GOCD-#{Process.pid}")
-    rm "GPG-KEY-GOCD-#{Process.pid}"
+    sh("gpg --export #{GPG_SIGNING_ID} --output #{debsig_keyring_folder}/debsig.gpg")
 
     File.write(
       "#{debsig_policies_folder}/debsig-verify-policy.pol",
       ERB.new(File.read('rakelib/debsig-verify-policy.xml.erb')).result(binding)
     )
-
-    puts File.read("#{debsig_policies_folder}/debsig-verify-policy.pol")
 
     Dir["#{signing_dir}/*.deb"].each do |f|
       sh("debsig-verify --verbose --debug --policies-dir '#{Dir.pwd}/debsig/policies' --keyrings-dir '#{Dir.pwd}/debsig/keyrings' '#{f}'")

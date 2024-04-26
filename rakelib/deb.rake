@@ -1,3 +1,5 @@
+require 'erb'
+
 # make sure deps are installed using
 # `apt-get install -y debsigs debsig-verify gnupg gnupg-agent apt-utils bzip2 gzip unzip zip rake sudo`
 # `echo "go ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/go`

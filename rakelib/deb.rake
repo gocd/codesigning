@@ -24,7 +24,7 @@ namespace :deb do
 
     cd signing_dir do
       Dir["*.deb"].each do |f|
-        sh("debsigs --verbose --sign=builder --default-key='#{GPG_SIGNING_ID}' '#{f}'")
+        sh("debsigs --verbose --sign=origin --default-key='#{GPG_SIGNING_ID}' '#{f}'")
       end
     end
 

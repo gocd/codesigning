@@ -44,13 +44,13 @@ namespace :deb do
     # FIXME Temporarily allow SHA1 signing. Needs to be moved to SHA256 when we can change our signing key
     # See https://github.com/gocd/gocd/issues/10722 and https://www.ryanchapin.com/solved-debsig-verify-for-failed-verification-error-signatures-using-the-sha1-algorithm-are-rejected-and-cant-check-signature-invalid-digest-algorithm/
     sh('sudo mkdir -p /etc/gnupg')
-    sh('sudo echo "allow-weak-digest-algos" >> /etc/gnupg/gpg.conf')
+    sh('sudo bash -c "echo allow-weak-digest-algos >> /etc/gnupg/gpg.conf"')
 
     Dir["#{signing_dir}/*.deb"].each do |f|
       sh("debsig-verify --verbose --policies-dir '#{Dir.pwd}/debsig/policies' --keyrings-dir '#{Dir.pwd}/debsig/keyrings' '#{f}'")
     end
 
-    rm "#{GNUPGHOME}/gpg.conf"
+    sh('sudo rm /etc/gnupg/gpg.conf')
 
     generate_metadata_for_single_dir signing_dir, '*.deb', :deb, { architecture: 'all', jre: { included: false } }
   end

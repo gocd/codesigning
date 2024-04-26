@@ -28,9 +28,18 @@ namespace :deb do
       end
     end
 
+    # Verify the signature with (the very painful) debsig-verify
+    debsig_keyring_folder = "/usr/share/debsig/keyrings/#{GPG_SIGNING_ID}"
+    debsig_policies_folder = "/etc/debsig/policies/#{GPG_SIGNING_ID}"
+    mkdir_p [debsig_keyring_folder, debsig_policies_folder]
     sh("gpg --armor --output GPG-KEY-GOCD-#{Process.pid} --export #{GPG_SIGNING_ID}")
-    sh("sudo apt-key add GPG-KEY-GOCD-#{Process.pid}")
+    sh("gpg --no-default-keyring --keyring #{debsig_keyring_folder}/debsig.gpg --import GPG-KEY-GOCD-#{Process.pid}")
     rm "GPG-KEY-GOCD-#{Process.pid}"
+
+    File.write(
+      "#{debsig_policies_folder}/debsig-verify-policy.xml",
+      ERB.new(File.read('rake_lib/debsig-verify-policy.xml.erb')).result(binding)
+    )
 
     Dir["#{signing_dir}/*.deb"].each do |f|
       sh("debsig-verify --verbose '#{f}'")

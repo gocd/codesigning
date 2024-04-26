@@ -44,7 +44,7 @@ namespace :deb do
     )
 
     Dir["#{signing_dir}/*.deb"].each do |f|
-      sh("debsig-verify --verbose --root '#{Dir.pwd}/debsig' '#{f}'")
+      sh("debsig-verify --verbose --debug --root '#{Dir.pwd}' --policies-dir '#{debsig_policies_folder}' --keyrings-dir '#{debsig_keyring_folder}' '#{f}'")
     end
 
     generate_metadata_for_single_dir signing_dir, '*.deb', :deb, { architecture: 'all', jre: { included: false } }

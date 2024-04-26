@@ -34,7 +34,7 @@ namespace :deb do
     debsig_policies_folder = "debsig/policies/#{GPG_SIGNING_ID}"
     debsig_keyring_folder = "debsig/keyrings/#{GPG_SIGNING_ID}"
     sh("mkdir -p #{debsig_policies_folder} #{debsig_keyring_folder}")
-    sh("gpg --export #{GPG_SIGNING_ID} --output #{debsig_keyring_folder}/debsig.gpg")
+    sh("gpg --output #{debsig_keyring_folder}/debsig.gpg --export #{GPG_SIGNING_ID}")
 
     File.write(
       "#{debsig_policies_folder}/debsig-verify-policy.pol",

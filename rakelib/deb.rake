@@ -43,6 +43,8 @@ namespace :deb do
       ERB.new(File.read('rakelib/debsig-verify-policy.xml.erb')).result(binding)
     )
 
+    puts File.read("#{debsig_policies_folder}/debsig-verify-policy.pol")
+
     Dir["#{signing_dir}/*.deb"].each do |f|
       sh("debsig-verify --verbose --debug --policies-dir '#{Dir.pwd}/debsig/policies' --keyrings-dir '#{Dir.pwd}/debsig/keyrings' '#{f}'")
     end

@@ -40,7 +40,7 @@ namespace :deb do
 
     File.write(
       "#{debsig_policies_folder}/debsig-verify-policy.pol",
-      ERB.new(File.read('rake_lib/debsig-verify-policy.xml.erb')).result(binding)
+      ERB.new(File.read('rakelib/debsig-verify-policy.xml.erb')).result(binding)
     )
 
     Dir["#{signing_dir}/*.deb"].each do |f|

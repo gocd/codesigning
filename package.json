@@ -16,11 +16,12 @@
   "dependencies": {
     "docker-hub-api": "^0.8.0",
     "github-base": "^1.0.0",
-    "request": "^2.88.2"
+    "request": "npm:@cypress/request@^3.0.1"
   },
   "overrides": {
     "docker-hub-api": {
-      "lodash": "^4.17.21"
+      "lodash": "^4.17.21",
+      "request": "npm:@cypress/request@^3.0.1"
     },
     "github-base": {
       "parse-link-header": "^2.0.0"

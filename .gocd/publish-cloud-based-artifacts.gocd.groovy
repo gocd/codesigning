@@ -24,13 +24,11 @@ GoCD.script {
   pipelines {
     pipeline('publish-cloud-based-artifacts') {
       environmentVariables = [
-        AWS_ACCESS_KEY_ID    : 'AKIAVL5CITUNP4CUFG4E',
         GOCD_STABLE_RELEASE  : 'true',
-        GIT_USER             : 'gocd-ci-user',
         version              : '',
         revision             : '',
+        GIT_USER             : 'gocd-ci-user',
         GIT_PASSWORD         : secretParam("GOCD_CI_USER_RELEASE_TOKEN"),
-        AWS_SECRET_ACCESS_KEY: secretParam("AWS_SECRET_KEY_FOR_PUBLISH_RELEASE")
       ]
       group = 'internal'
       labelTemplate = '${COUNT}'
@@ -237,11 +235,12 @@ GoCD.script {
             job('update_cloud_images') {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = [
-                REGION            : 'us-east-2',
-                DOCKERHUB_ORG     : 'gocd',
-                DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USER"),
-                DOCKERHUB_PASSWORD: secretParam("DOCKERHUB_PASS"),
-                DOCKERHUB_TOKEN   : secretParam("DOCKERHUB_TOKEN")
+                AWS_ACCESS_KEY_ID    : secretParam("AWS_ACCESS_KEY_ID_FOR_GOCD"),
+                AWS_SECRET_ACCESS_KEY: secretParam("AWS_SECRET_ACCESS_KEY_FOR_GOCD"),
+                DOCKERHUB_ORG        : 'gocd',
+                DOCKERHUB_USERNAME   : secretParam("DOCKERHUB_USER"),
+                DOCKERHUB_PASSWORD   : secretParam("DOCKERHUB_PASS"),
+                DOCKERHUB_TOKEN      : secretParam("DOCKERHUB_TOKEN"),
               ]
               tasks {
                 fetchArtifact {

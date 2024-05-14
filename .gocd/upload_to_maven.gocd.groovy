@@ -60,8 +60,8 @@ GoCD.script {
           environmentVariables = [
             'AUTO_RELEASE_TO_CENTRAL': 'true',
             'EXPERIMENTAL_RELEASE'   : 'false',
-            'MAVEN_NEXUS_USERNAME'   : 'arvindsv',
-            'MAVEN_NEXUS_PASSWORD'   : secretParam("ARVINDSV_NEXUS_PASSWORD")
+            'MAVEN_NEXUS_USERNAME'   : secretParam("MAVEN_CENTRAL_TOKEN_USERNAME"),
+            'MAVEN_NEXUS_PASSWORD'   : secretParam("MAVEN_CENTRAL_TOKEN_PASSWORD"),
           ]
           jobs {
             job('upload-to-maven') {

@@ -6,17 +6,6 @@ namespace :win do
   meta_source_dir = 'src/meta'
   sign_tool = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\signtool'
 
-  # assumes the following:
-  # - File `../signing-keys/windows-code-sign.p12.gpg` containing the encrypted p12/pfx codesigning key
-  # - environment variable `GOCD_GPG_PASSPHRASE` containing the passphrase to decrypt the said key
-  desc "setup code signing keys"
-  task :setup do
-    cd '../signing-keys' do
-      open('gpg-passphrase', 'w') {|f| f.write(ENV['GOCD_GPG_PASSPHRASE'])}
-      sh("gpg --quiet --batch --passphrase-file gpg-passphrase --output windows-code-sign.p12 windows-code-sign.p12.gpg")
-    end
-  end
-
   desc "sign win binaries"
   task :sign => ['setup'] do
     if Dir["#{win_source_dir}/*.exe"].empty?
@@ -42,7 +31,7 @@ namespace :win do
   end
 
   desc "sign a single windows binary"
-  task :sign_single_binary, [:path, :dest_archive] => [:setup] do |task, args|
+  task :sign_single_binary, [:path, :dest_archive] do |task, args|
     path = args[:path]
     dest_archive = File.expand_path(args[:dest_archive] || "#{File.basename(path)}.zip")
 

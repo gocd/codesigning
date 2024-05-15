@@ -28,14 +28,15 @@ namespace :win do
     Dir["#{win_source_dir}/*.{exe,json}"].each do |f|
       cp f, "#{signing_dir}"
     end
-    
-    Dir["#{signing_dir}/*.exe"].each do |f|
-      sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /t http://timestamp.digicert.com /a /fd sha1 "#{f}"})
-      sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /tr http://timestamp.digicert.com /a /fd sha256 /td sha256 /as "#{f}"})
 
-      sh(%Q{"#{sign_tool}" verify /debug /v /a /pa /hash sha1 "#{f}"})
-      sh(%Q{"#{sign_tool}" verify /debug /v /a /pa /hash sha256 "#{f}"})
-    end
+    # TODO re-enable signing when/if we have a valid code signing certificate. Existing cert expired 2024-05-15.
+    # Dir["#{signing_dir}/*.exe"].each do |f|
+    #   sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /t http://timestamp.digicert.com /a /fd sha1 "#{f}"})
+    #   sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /tr http://timestamp.digicert.com /a /fd sha256 /td sha256 /as "#{f}"})
+    #
+    #   sh(%Q{"#{sign_tool}" verify /debug /v /a /pa /hash sha1 "#{f}"})
+    #   sh(%Q{"#{sign_tool}" verify /debug /v /a /pa /hash sha256 "#{f}"})
+    # end
 
     generate_metadata_for_single_dir signing_dir, '*.exe', :win, { architecture: 'x64', jre: { included: true } }
   end
@@ -55,11 +56,12 @@ namespace :win do
 
     cp path, signed_file
 
-    sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /t http://timestamp.digicert.com /a /fd sha1 "#{signed_file}"})
-    sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /tr http://timestamp.digicert.com /a /fd sha256 /td sha256 /as "#{signed_file}"})
-
-    sh(%Q{"#{sign_tool}" verify /debug /v /a /pa /hash sha1 "#{signed_file}"})
-    sh(%Q{"#{sign_tool}" verify /debug /v /a /pa /hash sha256 "#{signed_file}"})
+    # TODO re-enable signing when/if we have a valid code signing certificate. Existing cert expired 2024-05-15.
+    # sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /t http://timestamp.digicert.com /a /fd sha1 "#{signed_file}"})
+    # sh(%Q{"#{sign_tool}" sign /debug /f ../signing-keys/windows-code-sign.p12 /v /tr http://timestamp.digicert.com /a /fd sha256 /td sha256 /as "#{signed_file}"})
+    #
+    # sh(%Q{"#{sign_tool}" verify /debug /v /a /pa /hash sha1 "#{signed_file}"})
+    # sh(%Q{"#{sign_tool}" verify /debug /v /a /pa /hash sha256 "#{signed_file}"})
 
     File.utime(0, 0, signed_file)
 

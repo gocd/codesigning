@@ -7,7 +7,7 @@ namespace :win do
   sign_tool = ENV['SIGNTOOL'] || 'C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\signtool'
 
   desc "sign win binaries"
-  task :sign => ['setup'] do
+  task :sign do
     if Dir["#{win_source_dir}/*.exe"].empty?
       raise "Unable to find any binaries in #{win_source_dir}"
     end

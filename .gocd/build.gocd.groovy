@@ -390,6 +390,17 @@ GoCD.script {
       }
 
       stages {
+        stage('dummy-stage') {
+          jobs {
+            job('do-nothing') {
+              tasks {
+                bash {
+                  commandString = 'echo'
+                }
+              }
+            }
+          }
+        }
         stage('promote-binaries') {
           approval {
             type = 'manual'

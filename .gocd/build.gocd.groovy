@@ -308,8 +308,7 @@ GoCD.script {
             type = 'manual'
           }
           environmentVariables = [
-            'AUTO_RELEASE_TO_CENTRAL': 'true',
-            'EXPERIMENTAL_RELEASE'   : 'true',
+            'EXPERIMENTAL_RELEASE'   : 'true', // Auto-releases to central when false
             'GOCD_GPG_PASSPHRASE'    : secretParam("GOCD_GPG_PASSPHRASE"),
             'MAVEN_NEXUS_USERNAME'   : secretParam("MAVEN_CENTRAL_TOKEN_USERNAME"),
             'MAVEN_NEXUS_PASSWORD'   : secretParam("MAVEN_CENTRAL_TOKEN_PASSWORD"),

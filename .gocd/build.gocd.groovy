@@ -308,10 +308,10 @@ GoCD.script {
             type = 'manual'
           }
           environmentVariables = [
-            'EXPERIMENTAL_RELEASE'   : 'true', // Auto-releases to central when false
-            'GOCD_GPG_PASSPHRASE'    : secretParam("GOCD_GPG_PASSPHRASE"),
-            'MAVEN_NEXUS_USERNAME'   : secretParam("MAVEN_CENTRAL_TOKEN_USERNAME"),
-            'MAVEN_NEXUS_PASSWORD'   : secretParam("MAVEN_CENTRAL_TOKEN_PASSWORD"),
+            'EXPERIMENTAL_RELEASE'         : 'true', // Auto-releases to central when false
+            'GOCD_GPG_PASSPHRASE'          : secretParam("GOCD_GPG_PASSPHRASE"),
+            'MAVEN_CENTRAL_TOKEN_USERNAME' : secretParam("MAVEN_CENTRAL_TOKEN_USERNAME"),
+            'MAVEN_CENTRAL_TOKEN_PASSWORD' : secretParam("MAVEN_CENTRAL_TOKEN_PASSWORD"),
           ]
           jobs {
             job('upload-maven') {

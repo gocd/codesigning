@@ -46,7 +46,7 @@ namespace :maven do
       File.open("#{artifact_name}/pom.xml", 'w') {|f| f.puts pom_content}
 
       cd "#{artifact_name}" do
-        sh("mvn --settings ../resources/settings.xml -DautoReleaseToCentral=#{auto_release_to_central} --batch-mode -Dusername=${MAVEN_NEXUS_USERNAME} -Dpassword=${MAVEN_NEXUS_PASSWORD} deploy")
+        sh("mvn --settings ../resources/settings.xml -DautoReleaseToCentral=#{auto_release_to_central} --batch-mode -Dusername=\"${MAVEN_CENTRAL_TOKEN_USERNAME}\" -Dpassword=\"${MAVEN_CENTRAL_TOKEN_PASSWORD}\" deploy")
       end
 
     end

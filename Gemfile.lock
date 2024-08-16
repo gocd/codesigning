@@ -20,7 +20,7 @@ GEM
     base64 (0.2.0)
     domain_name (0.6.20240107)
     http-accept (1.7.0)
-    http-cookie (1.0.6)
+    http-cookie (1.0.7)
       domain_name (~> 0.5)
     jmespath (1.6.2)
     mime-types (3.5.2)

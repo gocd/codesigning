@@ -34,14 +34,6 @@ GoCD.script {
       labelTemplate = '${COUNT}'
       lockBehavior = 'none'
       materials {
-        git('GocdChocolatey') {
-          branch = 'master'
-          shallowClone = true
-          url = 'https://git.gocd.io/git/gocd/gocd-chocolatey'
-          destination = 'gocd-chocolatey'
-          autoUpdate = true
-          blacklist = ["**/*.*", "**/*"]
-        }
         git('CodeSigning') {
           branch = 'master'
           shallowClone = false
@@ -129,72 +121,6 @@ GoCD.script {
                 bash {
                   commandString = './gradlew --parallel --max-workers 4 docker:assemble -PskipDockerBuild -PdockerbuildServerZipLocation=\$(readlink -f zip/go-server-*.zip) -PdockerbuildAgentZipLocation=\$(readlink -f zip/go-agent-*.zip) -PdockerGitPush="I_REALLY_WANT_TO_DO_THIS"'
                   workingDir = 'gocd'
-                }
-              }
-            }
-            job('choco-server') {
-              elasticProfileId = 'window-dev-build'
-              environmentVariables = [
-                version : '',
-                revision: '',
-                apiKey  : secretParam("CHOCO_API_KEY")
-              ]
-              tasks {
-                fetchArtifact {
-                  file = true
-                  job = 'dist'
-                  pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
-                  source = 'dist/meta/version.json'
-                  stage = 'dist'
-                  destination = ""
-                }
-                exec {
-                  commandLine = ['powershell', '-ExecutionPolicy',
-                                 'ByPass',
-                                 '-File',
-                                 '.\\createPackage.ps1',
-                                 'server']
-                  runIf = 'passed'
-                  workingDir = "gocd-chocolatey"
-                }
-                exec {
-                  commandLine = ['powershell', '$env:version=(Get-Content \'..\\version.json\' | ConvertFrom-Json).go_version; choco push gocd-server\\gocdserver.$env:version.nupkg -k $env:apiKey --source https://push.chocolatey.org/']
-                  runIf = 'passed'
-                  workingDir = "gocd-chocolatey"
-                }
-              }
-            }
-            job('choco-agent') {
-              elasticProfileId = 'window-dev-build'
-              environmentVariables = [
-                version : '',
-                revision: '',
-                apiKey  : secretParam("CHOCO_API_KEY")
-              ]
-              tasks {
-                fetchArtifact {
-                  file = true
-                  job = 'dist'
-                  pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
-                  source = 'dist/meta/version.json'
-                  stage = 'dist'
-                  destination = ""
-                }
-                exec {
-                  commandLine = ['powershell', '-ExecutionPolicy',
-                                 'ByPass',
-                                 '-File',
-                                 '.\\createPackage.ps1',
-                                 'agent']
-                  runIf = 'passed'
-                  workingDir = "gocd-chocolatey"
-                }
-                exec {
-                  commandLine = ['powershell', '$env:version=(Get-Content \'..\\version.json\' | ConvertFrom-Json).go_version; choco push gocd-agent\\gocdagent.$env:version.nupkg -k $env:apiKey --source https://push.chocolatey.org/']
-                  runIf = 'passed'
-                  workingDir = "gocd-chocolatey"
                 }
               }
             }

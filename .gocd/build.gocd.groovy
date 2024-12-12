@@ -179,7 +179,7 @@ GoCD.script {
               }
             }
             job('upload-docker-image') {
-              elasticProfileId = 'ecs-gocd-dev-build-dind'
+              elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = [
                 DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USER"),
                 DOCKERHUB_PASSWORD: secretParam("DOCKERHUB_PASS"),

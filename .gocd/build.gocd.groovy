@@ -158,7 +158,7 @@ GoCD.script {
                 add(fetchArtifactTask('win'))
                 add(fetchArtifactTask('meta'))
                 exec {
-                  commandLine = ['rake', '--trace', 'win:sign', 'win:upload[%EXPERIMENTAL_DOWNLOAD_BUCKET%]']
+                  commandLine = ['rake', '--trace', 'win:metadata', 'win:upload[%EXPERIMENTAL_DOWNLOAD_BUCKET%]']
                   workingDir = 'codesigning'
                 }
               }

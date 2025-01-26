@@ -157,8 +157,8 @@ GoCD.script {
                 addAll(cleanTasks())
                 add(fetchArtifactTask('win'))
                 add(fetchArtifactTask('meta'))
-                exec {
-                  commandLine = ['rake', '--trace', 'win:metadata', 'win:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET]']
+                bash {
+                  commandString = 'bundle exec rake --trace win:metadata win:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET]'
                   workingDir = 'codesigning'
                 }
               }

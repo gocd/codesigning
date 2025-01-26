@@ -158,6 +158,10 @@ GoCD.script {
                 add(fetchArtifactTask('win'))
                 add(fetchArtifactTask('meta'))
                 bash {
+                  commandString = "bundle"
+                  workingDir = 'codesigning'
+                }
+                bash {
                   commandString = 'bundle exec rake --trace win:metadata win:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
                   workingDir = 'codesigning'
                 }

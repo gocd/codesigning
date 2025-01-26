@@ -152,7 +152,7 @@ GoCD.script {
               }
             }
             job('win') {
-              elasticProfileId = 'window-dev-build'
+              elasticProfileId = 'ecs-gocd-dev-build'
               tasks {
                 addAll(cleanTasks())
                 add(fetchArtifactTask('win'))

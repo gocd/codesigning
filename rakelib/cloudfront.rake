@@ -28,7 +28,7 @@ namespace :cloudfront do
     shiv *%w/aws cloudfront list-distributions --query DistributionList.Items[].{Id:Id,Names:Aliases.Items}/ do |json|
       puts "Finding GoCD CloudFront distributions for downloads\n"
 
-      distros = find_by_alias(JSON.parse(json), %w(download.gocd.org download.gocd.io)).tap { |results|
+      distros = find_by_alias(JSON.parse(json), %w(download.gocd.org)).tap { |results|
         if results.size > 0
           puts "  => Located distributions: [ #{results.join(", ")} ]\n"
         else

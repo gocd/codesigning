@@ -52,18 +52,6 @@ def secretParam = { String param ->
   return "{{SECRET:[build-pipelines][$param]}}".toString()
 }
 
-def environmentVariableForGoCD = [
-  GOCD_GPG_PASSPHRASE  : secretParam("GOCD_GPG_PASSPHRASE"),
-  AWS_ACCESS_KEY_ID    : secretParam("AWS_ACCESS_KEY_ID_FOR_GOCD"),
-  AWS_SECRET_ACCESS_KEY: secretParam("AWS_SECRET_ACCESS_KEY_FOR_GOCD")
-]
-
-def environmentVariableForUpdateChannel = [
-  GOCD_GPG_PASSPHRASE  : secretParam("GOCD_GPG_PASSPHRASE"),
-  AWS_ACCESS_KEY_ID    : secretParam("AWS_ACCESS_KEY_ID_FOR_UPDATE_CHANNEL"),
-  AWS_SECRET_ACCESS_KEY: secretParam("AWS_SECRET_ACCESS_KEY_FOR_UPDATE_CHANNEL")
-]
-
 GoCD.script {
   environments {
     environment('internal') {
@@ -104,12 +92,12 @@ GoCD.script {
       stages {
         stage('sign-and-upload') {
           cleanWorkingDir = true
-          //credentials for gocd experimental builds
-          environmentVariables = environmentVariableForGoCD
-
+          environmentVariables = [
+            GOCD_GPG_PASSPHRASE  : secretParam("GOCD_GPG_PASSPHRASE"),
+          ]
           jobs {
             job('rpm') {
-              elasticProfileId = 'ecs-gocd-dev-build'
+              elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
               tasks {
                 addAll(cleanTasks())
                 add(fetchArtifactTask('rpm'))
@@ -125,7 +113,7 @@ GoCD.script {
               }
             }
             job('deb') {
-              elasticProfileId = 'ubuntu'
+              elasticProfileId = 'ubuntu-release-aws-privileged'
               tasks {
                 addAll(cleanTasks())
                 add(fetchArtifactTask('deb'))
@@ -137,7 +125,7 @@ GoCD.script {
               }
             }
             job('zip') {
-              elasticProfileId = 'ecs-gocd-dev-build'
+              elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
               tasks {
                 add(fetchArtifactTask('zip'))
                 add(fetchArtifactTask('meta'))
@@ -152,7 +140,7 @@ GoCD.script {
               }
             }
             job('win') {
-              elasticProfileId = 'ecs-gocd-dev-build'
+              elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
               tasks {
                 addAll(cleanTasks())
                 add(fetchArtifactTask('win'))
@@ -168,7 +156,7 @@ GoCD.script {
               }
             }
             job('osx') {
-              elasticProfileId = 'ecs-gocd-dev-build'
+              elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
               tasks {
                 add(fetchArtifactTask('osx'))
                 add(fetchArtifactTask('meta'))
@@ -230,16 +218,16 @@ GoCD.script {
         }
 
         stage('aggregate-jsons') {
-          //credentials for gocd experimental builds
-          environmentVariables = environmentVariableForGoCD + [
-            DOCKERHUB_ORG     : 'gocdexperimental',
-            DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USER"),
-            DOCKERHUB_PASSWORD: secretParam("DOCKERHUB_PASS"),
-            DOCKERHUB_TOKEN   : secretParam("DOCKERHUB_TOKEN")
+          environmentVariables = [
+            GOCD_GPG_PASSPHRASE: secretParam("GOCD_GPG_PASSPHRASE"),
+            DOCKERHUB_ORG      : 'gocdexperimental',
+            DOCKERHUB_USERNAME : secretParam("DOCKERHUB_USER"),
+            DOCKERHUB_PASSWORD : secretParam("DOCKERHUB_PASS"),
+            DOCKERHUB_TOKEN    : secretParam("DOCKERHUB_TOKEN")
           ]
           jobs {
             job('aggregate-jsons') {
-              elasticProfileId = 'ecs-gocd-dev-build'
+              elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
               artifacts {
                 build {
                   destination = 'out'
@@ -263,12 +251,12 @@ GoCD.script {
         }
 
         stage('metadata') {
-          //credentials for gocd update channel
-          environmentVariables = environmentVariableForUpdateChannel
-
+          environmentVariables = [
+            GOCD_GPG_PASSPHRASE: secretParam("GOCD_GPG_PASSPHRASE"),
+          ]
           jobs {
             job('generate') {
-              elasticProfileId = 'ecs-gocd-dev-build'
+              elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
               tasks {
                 addAll(cleanTasks())
                 add(fetchArtifactTask('meta'))
@@ -287,11 +275,9 @@ GoCD.script {
         }
 
         stage('cloudfront-invalidation') {
-          environmentVariables = environmentVariableForGoCD
-
           jobs {
             job('invalidate-distributions') {
-              elasticProfileId = 'ecs-gocd-dev-build'
+              elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
               tasks {
                 bash {
                   commandString = "bundle"
@@ -312,10 +298,10 @@ GoCD.script {
             type = 'manual'
           }
           environmentVariables = [
-            'EXPERIMENTAL_RELEASE'         : 'true', // Auto-releases to central when false
-            'GOCD_GPG_PASSPHRASE'          : secretParam("GOCD_GPG_PASSPHRASE"),
-            'MAVEN_CENTRAL_TOKEN_USERNAME' : secretParam("MAVEN_CENTRAL_TOKEN_USERNAME"),
-            'MAVEN_CENTRAL_TOKEN_PASSWORD' : secretParam("MAVEN_CENTRAL_TOKEN_PASSWORD"),
+            EXPERIMENTAL_RELEASE        : 'true', // Auto-releases to central when false
+            GOCD_GPG_PASSPHRASE         : secretParam("GOCD_GPG_PASSPHRASE"),
+            MAVEN_CENTRAL_TOKEN_USERNAME: secretParam("MAVEN_CENTRAL_TOKEN_USERNAME"),
+            MAVEN_CENTRAL_TOKEN_PASSWORD: secretParam("MAVEN_CENTRAL_TOKEN_PASSWORD"),
           ]
           jobs {
             job('upload-maven') {
@@ -397,11 +383,9 @@ GoCD.script {
           approval {
             type = 'manual'
           }
-          //credentials for gocd experimental/stable builds
-          environmentVariables = environmentVariableForGoCD
           jobs {
             job('promote-binaries') {
-              elasticProfileId = 'ecs-gocd-dev-build'
+              elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
               tasks {
                 bash {
                   commandString = 'if [ "${REALLY_REALLY_UPLOAD}" != \'YES_I_REALLY_REALLY_WANT_TO_UPLOAD\' ]; then echo "REALLY_REALLY_UPLOAD environment variable should be overridden while triggering."; exit 1; fi'
@@ -427,11 +411,12 @@ GoCD.script {
         }
 
         stage('create-repositories') {
-          //credentials for gocd stable builds
-          environmentVariables = environmentVariableForGoCD
+          environmentVariables = [
+            GOCD_GPG_PASSPHRASE  : secretParam("GOCD_GPG_PASSPHRASE"),
+          ]
           jobs {
             job('apt') {
-              elasticProfileId = 'ubuntu'
+              elasticProfileId = 'ubuntu-release-aws-privileged'
               tasks {
                 fetchDirectory {
                   pipeline = 'installers/code-sign'
@@ -448,7 +433,7 @@ GoCD.script {
             }
 
             job('yum') {
-              elasticProfileId = 'ecs-gocd-dev-build'
+              elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
               tasks {
                 fetchDirectory {
                   pipeline = 'installers/code-sign'
@@ -471,11 +456,9 @@ GoCD.script {
         }
 
         stage('publish-stable-releases-json') {
-          //credentials for gocd stable builds
-          environmentVariables = environmentVariableForGoCD
           jobs {
             job('publish') {
-              elasticProfileId = 'ecs-gocd-dev-build'
+              elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
               tasks {
                 fetchDirectory {
                   pipeline = 'installers/code-sign'
@@ -498,11 +481,9 @@ GoCD.script {
         }
 
         stage('publish-latest-json') {
-          //credentials for gocd update channel
-          environmentVariables = environmentVariableForUpdateChannel
           jobs {
             job('publish') {
-              elasticProfileId = 'ecs-gocd-dev-build'
+              elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
               tasks {
                 fetchDirectory {
                   pipeline = 'installers/code-sign'

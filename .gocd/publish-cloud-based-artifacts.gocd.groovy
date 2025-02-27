@@ -140,11 +140,7 @@ GoCD.script {
           ]
           jobs {
             job('empty_exp_bucket') {
-              elasticProfileId = 'ecs-gocd-dev-build'
-              environmentVariables = [
-                AWS_ACCESS_KEY_ID    : secretParam("AWS_ACCESS_KEY_ID_FOR_EXP_RELEASE"),
-                AWS_SECRET_ACCESS_KEY: secretParam("AWS_SECRET_KEY_FOR_EXP_RELEASE")
-              ]
+              elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
               tasks {
                 exec {
                   commandLine = ['bash', '-c', 'bundle && bundle exec rake empty_experimental_bucket']
@@ -159,10 +155,8 @@ GoCD.script {
               }
             }
             job('update_cloud_images') {
-              elasticProfileId = 'ecs-gocd-dev-build'
+              elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
               environmentVariables = [
-                AWS_ACCESS_KEY_ID    : secretParam("AWS_ACCESS_KEY_ID_FOR_GOCD"),
-                AWS_SECRET_ACCESS_KEY: secretParam("AWS_SECRET_ACCESS_KEY_FOR_GOCD"),
                 DOCKERHUB_ORG        : 'gocd',
                 DOCKERHUB_USERNAME   : secretParam("DOCKERHUB_USER"),
                 DOCKERHUB_PASSWORD   : secretParam("DOCKERHUB_PASS"),

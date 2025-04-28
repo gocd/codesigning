@@ -18,29 +18,6 @@ namespace :win do
     generate_metadata_for_single_dir output_dir, '*.exe', :win, { architecture: 'x64', jre: { included: true } }
   end
 
-  desc "generate metadata for a single windows binary"
-  task :metadata_single_binary, [:path, :dest_archive] do |task, args|
-    path = args[:path]
-    dest_archive = File.expand_path(args[:dest_archive] || "#{File.basename(path)}.zip")
-
-    fail "You must specify a path to sign" if path.nil?
-    fail "Path #{path} does not exists"  unless File.exist?(path)
-    fail "Path must be a file, not a directory" if File.directory?(path)
-
-    dest_dir = File.dirname(dest_archive)
-    work_dir = ensure_clean_dir(File.join("tmp", SecureRandom.hex))
-    output_file = File.join(work_dir, File.basename(path))
-
-    cp path, output_file
-    File.utime(0, 0, output_file)
-
-    cd work_dir do
-      sh("jar -cMf #{dest_archive} .")
-    end
-
-    generate_metadata_for_single_dir dest_dir, '*.zip', :win
-  end
-
   desc "upload the win binaries, after generating metadata"
   task :upload, [:bucket_url] => :metadata do |t, args|
     bucket_url = args[:bucket_url]

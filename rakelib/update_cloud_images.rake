@@ -55,12 +55,11 @@ end
 private
 
 def docker_agents(version)
-  # dockerhub_token = env("DOCKERHUB_TOKEN")
   dockerhub_username = env("DOCKERHUB_USERNAME")
-  dockerhub_password = env("DOCKERHUB_PASSWORD")
+  dockerhub_token = env("DOCKERHUB_TOKEN")
   org = env("DOCKERHUB_ORG")
 
-  login = RestClient.post('https://hub.docker.com/v2/users/login/',{username: dockerhub_username, password: dockerhub_password}.to_json, {:accept => 'application/json', :content_type => 'application/json'})
+  login = RestClient.post('https://hub.docker.com/v2/users/login/',{username: dockerhub_username, password: dockerhub_token}.to_json, {:accept => 'application/json', :content_type => 'application/json'})
   token = JSON.parse(login)['token']
 
   response = RestClient.get("https://hub.docker.com/v2/repositories/#{org}/?page_size=50", {:accept => 'application/json', :Authorization => "JWT #{token}"})

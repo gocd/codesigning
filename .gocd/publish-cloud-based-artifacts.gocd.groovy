@@ -67,8 +67,7 @@ GoCD.script {
             job('publish-all-docker-images') {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = [
-                DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USER"),
-                DOCKERHUB_PASSWORD: secretParam("DOCKERHUB_PASS"),
+                DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USERNAME"),
                 DOCKERHUB_TOKEN   : secretParam("DOCKERHUB_TOKEN")
               ]
               tasks {
@@ -158,8 +157,7 @@ GoCD.script {
               elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
               environmentVariables = [
                 DOCKERHUB_ORG        : 'gocd',
-                DOCKERHUB_USERNAME   : secretParam("DOCKERHUB_USER"),
-                DOCKERHUB_PASSWORD   : secretParam("DOCKERHUB_PASS"),
+                DOCKERHUB_USERNAME   : secretParam("DOCKERHUB_USERNAME"),
                 DOCKERHUB_TOKEN      : secretParam("DOCKERHUB_TOKEN"),
               ]
               tasks {
@@ -183,8 +181,7 @@ GoCD.script {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = [
                 DOCKERHUB_ORG     : 'gocdexperimental',
-                DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USER"),
-                DOCKERHUB_PASSWORD: secretParam("DOCKERHUB_PASS"),
+                DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USERNAME"),
                 DOCKERHUB_TOKEN   : secretParam("DOCKERHUB_TOKEN")
               ]
               tasks {
@@ -199,8 +196,7 @@ GoCD.script {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = [
                 DOCKERHUB_ORG     : 'gocdexperimental',
-                DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USER"),
-                DOCKERHUB_PASSWORD: secretParam("DOCKERHUB_PASS"),
+                DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USERNAME"),
                 DOCKERHUB_TOKEN   : secretParam("DOCKERHUB_TOKEN")
               ]
               tasks {

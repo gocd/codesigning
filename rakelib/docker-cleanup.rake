@@ -1,5 +1,4 @@
 task :cleanup_docker do
-  # dockerhub_token = env("DOCKERHUB_TOKEN")
   dockerhub_username = env("DOCKERHUB_USERNAME")
   dockerhub_token = env("DOCKERHUB_TOKEN")
   org = env("DOCKERHUB_ORG")

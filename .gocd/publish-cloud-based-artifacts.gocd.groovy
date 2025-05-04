@@ -113,7 +113,7 @@ GoCD.script {
                   destination = "gocd"
                 }
                 bash {
-                  commandString = 'git config --global user.email "godev+gocd-ci-user@thoughtworks.com"'
+                  commandString = 'git config --global user.email "12554687+gocd-ci-user@users.noreply.github.com"'
                   runIf = 'passed'
                   workingDir = "codesigning"
                 }

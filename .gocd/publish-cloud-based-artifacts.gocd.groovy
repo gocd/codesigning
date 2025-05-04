@@ -133,9 +133,8 @@ GoCD.script {
             type = 'success'
           }
           environmentVariables = [
-            'EXPERIMENTAL_DOWNLOAD_BUCKET': 'downloadgocdio-experimentaldownloadss3-dakr8wkhi2bo/experimental',
-            'STABLE_DOWNLOAD_BUCKET'      : 'downloadgocdio-downloadgocdios3-192sau789jtkh',
-            'DOCKERHUB_TOKEN'             : secretParam("DOCKERHUB_TOKEN")
+            EXPERIMENTAL_DOWNLOAD_BUCKET: 'downloadgocdio-experimentaldownloadss3-dakr8wkhi2bo/experimental',
+            STABLE_DOWNLOAD_BUCKET      : 'downloadgocdio-downloadgocdios3-192sau789jtkh',
           ]
           jobs {
             job('empty_exp_bucket') {
@@ -155,11 +154,6 @@ GoCD.script {
             }
             job('update_cloud_images') {
               elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
-              environmentVariables = [
-                DOCKERHUB_ORG        : 'gocd',
-                DOCKERHUB_USERNAME   : secretParam("DOCKERHUB_USERNAME"),
-                DOCKERHUB_TOKEN      : secretParam("DOCKERHUB_TOKEN"),
-              ]
               tasks {
                 fetchArtifact {
                   file = true

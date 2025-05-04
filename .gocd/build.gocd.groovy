@@ -219,9 +219,6 @@ GoCD.script {
         stage('aggregate-jsons') {
           environmentVariables = [
             GOCD_GPG_PASSPHRASE: secretParam("GOCD_GPG_PASSPHRASE"),
-            DOCKERHUB_ORG      : 'gocdexperimental',
-            DOCKERHUB_USERNAME : secretParam("DOCKERHUB_USERNAME"),
-            DOCKERHUB_TOKEN    : secretParam("DOCKERHUB_TOKEN")
           ]
           jobs {
             job('aggregate-jsons') {

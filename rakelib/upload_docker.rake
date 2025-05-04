@@ -7,7 +7,7 @@ namespace :docker do
     creds = {
       :auths => {
         "https://index.docker.io/v1/" => {
-          :auth => env("DOCKERHUB_TOKEN")
+          :auth => Base64.strict_encode64("#{env("DOCKERHUB_USERNAME")}:#{env("DOCKERHUB_TOKEN")}")
         }
       }
     }

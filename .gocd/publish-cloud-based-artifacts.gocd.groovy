@@ -189,7 +189,6 @@ GoCD.script {
             job('update_dockerhub_full_description') {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = [
-                DOCKERHUB_ORG     : 'gocdexperimental',
                 DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USERNAME"),
                 DOCKERHUB_TOKEN   : secretParam("DOCKERHUB_TOKEN")
               ]

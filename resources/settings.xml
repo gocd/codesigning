@@ -10,7 +10,7 @@
     <pluginGroups/>
     <servers>
         <server>
-            <id>nexus-oss</id>
+            <id>central</id>
             <username>${username}</username>
             <password>${password}</password>
         </server>
@@ -19,7 +19,7 @@
     <proxies/>
     <profiles>
         <profile>
-            <id>nexus-oss</id>
+            <id>central</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>

@@ -63,9 +63,9 @@ GoCD.script {
     pipeline('code-sign') { thisPipeline ->
       group = 'go-cd'
       environmentVariables = [
-        'STABLE_DOWNLOAD_BUCKET'      : 'downloadgocdio-downloadgocdios3-192sau789jtkh',
-        'EXPERIMENTAL_DOWNLOAD_BUCKET': 'downloadgocdio-experimentaldownloadss3-dakr8wkhi2bo/experimental',
-        'UPDATE_CHECK_BUCKET'         : 'updategocdio-updategocdios3-1ujj23u8hpqdl'
+        STABLE_DOWNLOAD_BUCKET      : 'downloadgocdio-downloadgocdios3-192sau789jtkh',
+        EXPERIMENTAL_DOWNLOAD_BUCKET: 'downloadgocdio-experimentaldownloadss3-dakr8wkhi2bo/experimental',
+        UPDATE_CHECK_BUCKET         : 'updategocdio-updategocdios3-1ujj23u8hpqdl'
       ]
 
       materials() {
@@ -349,10 +349,10 @@ GoCD.script {
       group = 'go-cd'
 
       environmentVariables = [
-        'STABLE_DOWNLOAD_BUCKET'      : 'downloadgocdio-downloadgocdios3-192sau789jtkh',
-        'EXPERIMENTAL_DOWNLOAD_BUCKET': 'downloadgocdio-experimentaldownloadss3-dakr8wkhi2bo/experimental',
-        'UPDATE_CHECK_BUCKET'         : 'updategocdio-updategocdios3-1ujj23u8hpqdl',
-        'REALLY_REALLY_UPLOAD'        : ''
+        STABLE_DOWNLOAD_BUCKET      : 'downloadgocdio-downloadgocdios3-192sau789jtkh',
+        EXPERIMENTAL_DOWNLOAD_BUCKET: 'downloadgocdio-experimentaldownloadss3-dakr8wkhi2bo/experimental',
+        UPDATE_CHECK_BUCKET         : 'updategocdio-updategocdios3-1ujj23u8hpqdl',
+        REALLY_REALLY_UPLOAD        : ''
       ]
 
       materials() {

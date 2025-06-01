@@ -19,7 +19,7 @@ GEM
       aws-sigv4 (~> 1.5)
     aws-sigv4 (1.11.0)
       aws-eventstream (~> 1, >= 1.0.2)
-    base64 (0.2.0)
+    base64 (0.3.0)
     domain_name (0.6.20240107)
     http-accept (1.7.0)
     http-cookie (1.0.8)

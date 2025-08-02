@@ -27,8 +27,7 @@ namespace :rpm do
     # FIXME Temporarily allow SHA1 hashes within signatures on RHEL 9+. Needs to be moved to SHA256 when we can change our signing key
     # or may be an issue with signatures on older RPMs from before a certain point.
     # See https://github.com/gocd/gocd/issues/10722
-    File.write("/etc/crypto-policies/policies/modules/SHA1-HASH.pmod", "hash = +SHA1")
-    sh("sudo update-crypto-policies --set DEFAULT:SHA1-HASH")
+    sh("sudo bash -c '(echo \"hash = +SHA1\" >/etc/crypto-policies/policies/modules/SHA1-HASH.pmod) && update-crypto-policies --set DEFAULT:SHA1-HASH'")
 
     sh("sudo rpm --import GPG-KEY-GOCD-#{Process.pid}")
     rm "GPG-KEY-GOCD-#{Process.pid}"

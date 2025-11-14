@@ -28,7 +28,7 @@ GoCD.script {
           destination = 'codesigning'
           shallowClone = false
           url = 'https://git.gocd.io/git/gocd/codesigning'
-          blacklist = ["**/*.*", "**/*"]
+          blacklist = ['**/*.*', '**/*']
         }
         dependency('PromoteToStable') {
           pipeline = 'PublishStableRelease'
@@ -46,7 +46,7 @@ GoCD.script {
             job('draft-release') {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = [
-                GITHUB_TOKEN: "{{SECRET:[build-pipelines][GOCD_CI_USER_RELEASE_TOKEN]}}"
+                GITHUB_TOKEN: '{{SECRET:[build-pipelines][GOCD_CI_USER_RELEASE_TOKEN]}}'
               ]
               timeout = 0
               tasks {
@@ -55,18 +55,11 @@ GoCD.script {
                   file = true
                   job = 'dist'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'dist/meta/version.json'
                   stage = 'dist'
                 }
-                exec {
-                  commandLine = ['npm', 'install']
-                  runIf = 'passed'
-                  workingDir = 'codesigning'
-                }
-                exec {
-                  commandLine = ['node', 'lib/draft_new_release.js']
-                  runIf = 'passed'
+                bash {
+                  commandString = 'npm install && node lib/draft_new_release.js'
                   workingDir = 'codesigning'
                 }
               }
@@ -80,7 +73,7 @@ GoCD.script {
           fetchMaterials = true
           environmentVariables = [
             GIT_USERNAME: 'gocd-ci-user',
-            GITHUB_TOKEN: "{{SECRET:[build-pipelines][GOCD_CI_USER_RELEASE_TOKEN]}}"
+            GITHUB_TOKEN: '{{SECRET:[build-pipelines][GOCD_CI_USER_RELEASE_TOKEN]}}'
           ]
           jobs {
             job('update-gocd') {
@@ -91,18 +84,11 @@ GoCD.script {
                   file = true
                   job = 'dist'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'dist/meta/version.json'
                   stage = 'dist'
                 }
-                exec {
-                  commandLine = ['npm', 'install']
-                  runIf = 'passed'
-                  workingDir = 'codesigning'
-                }
-                exec {
-                  commandLine = ['node', 'lib/bump_gocd_version.js']
-                  runIf = 'passed'
+                bash {
+                  commandString = 'npm install && node lib/bump_gocd_version.js'
                   workingDir = 'codesigning'
                 }
               }
@@ -116,18 +102,11 @@ GoCD.script {
                   file = true
                   job = 'dist'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'dist/meta/version.json'
                   stage = 'dist'
                 }
-                exec {
-                  commandLine = ['npm', 'install']
-                  runIf = 'passed'
-                  workingDir = 'codesigning'
-                }
-                exec {
-                  commandLine = ['node', 'lib/bump_go_plugins_version.js']
-                  runIf = 'passed'
+                bash {
+                  commandString = 'npm install && node lib/bump_go_plugins_version.js'
                   workingDir = 'codesigning'
                 }
               }
@@ -141,18 +120,11 @@ GoCD.script {
                   file = true
                   job = 'dist'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'dist/meta/version.json'
                   stage = 'dist'
                 }
-                exec {
-                  commandLine = ['npm', 'install']
-                  runIf = 'passed'
-                  workingDir = 'codesigning'
-                }
-                exec {
-                  commandLine = ['node', 'lib/bump_gocd_version_installer_testing.js']
-                  runIf = 'passed'
+                bash {
+                  commandString = 'npm install && node lib/bump_gocd_version_installer_testing.js'
                   workingDir = 'codesigning'
                 }
               }

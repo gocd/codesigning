@@ -30,14 +30,14 @@ GoCD.script {
       labelTemplate = '${COUNT}'
       lockBehavior = 'none'
       environmentVariables = [
-        GOCD_GPG_PASSPHRASE: secretParam("GOCD_GPG_PASSPHRASE"),
-        GIT_PASSWORD       : secretParam("GOCD_CI_USER_RELEASE_TOKEN")
+        GOCD_GPG_PASSPHRASE: secretParam('GOCD_GPG_PASSPHRASE'),
+        GIT_PASSWORD       : secretParam('GOCD_CI_USER_RELEASE_TOKEN')
       ]
       materials {
         git('signing-keys') {
-          url = "https://git.gocd.io/git/gocd/signing-keys"
-          destination = "signing-keys"
-          blacklist = ["**/*.*", "**/*"]
+          url = 'https://git.gocd.io/git/gocd/signing-keys'
+          destination = 'signing-keys'
+          blacklist = ['**/*.*', '**/*']
         }
         git('CodeSigning') {
           branch = 'master'
@@ -45,7 +45,7 @@ GoCD.script {
           url = 'https://git.gocd.io/git/gocd/codesigning'
           destination = 'codesigning'
           autoUpdate = true
-          blacklist = ["**/*.*", "**/*"]
+          blacklist = ['**/*.*', '**/*']
         }
         dependency('PromoteToStable') {
           pipeline = 'PublishStableRelease'
@@ -59,8 +59,8 @@ GoCD.script {
           fetchMaterials = true
           environmentVariables = [
             EXPERIMENTAL_RELEASE        : 'false', // Auto-releases to central when false
-            MAVEN_CENTRAL_TOKEN_USERNAME: secretParam("MAVEN_CENTRAL_TOKEN_USERNAME"),
-            MAVEN_CENTRAL_TOKEN_PASSWORD: secretParam("MAVEN_CENTRAL_TOKEN_PASSWORD"),
+            MAVEN_CENTRAL_TOKEN_USERNAME: secretParam('MAVEN_CENTRAL_TOKEN_USERNAME'),
+            MAVEN_CENTRAL_TOKEN_PASSWORD: secretParam('MAVEN_CENTRAL_TOKEN_PASSWORD'),
           ]
           jobs {
             job('upload-to-maven') {
@@ -70,33 +70,30 @@ GoCD.script {
                   file = true
                   job = 'dist'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'dist/meta/version.json'
                   stage = 'dist'
-                  destination = "codesigning"
+                  destination = 'codesigning'
                 }
                 fetchArtifact {
                   job = 'dist'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'go-plugin-api'
                   stage = 'dist'
-                  destination = "codesigning"
+                  destination = 'codesigning'
                 }
                 fetchArtifact {
                   job = 'dist'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'go-plugin-config-repo'
                   stage = 'dist'
-                  destination = "codesigning"
+                  destination = 'codesigning'
                 }
                 bash {
-                  commandString = "bundle"
+                  commandString = 'bundle install'
                   workingDir = 'codesigning'
                 }
                 bash {
-                  commandString = "bundle exec rake maven:upload_to_maven"
+                  commandString = 'bundle exec rake maven:upload_to_maven'
                   workingDir = 'codesigning'
                 }
               }

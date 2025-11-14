@@ -9,3 +9,4 @@ gocd-groovy-dsl-config-plugin-*.jar
 node_modules
 .node-version
 .nvmrc
+*.jar

@@ -28,7 +28,7 @@ GoCD.script {
           destination = 'codesigning'
           shallowClone = false
           url = 'https://github.com/gocd/codesigning'
-          blacklist = ["**/*.*", "**/*"]
+          blacklist = ['**/*.*', '**/*']
         }
         dependency('PromoteToStable') {
           pipeline = 'PublishStableRelease'
@@ -54,19 +54,12 @@ GoCD.script {
                   destination = 'codesigning'
                   job = 'dist'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'dist/meta/version.json'
                   stage = 'dist'
                   file = true
                 }
-                exec {
-                  commandLine = ['npm', 'install']
-                  runIf = 'passed'
-                  workingDir = 'codesigning'
-                }
-                exec {
-                  commandLine = ['node', 'lib/bump_gocd_helm_chart_version.js']
-                  runIf = 'passed'
+                bash {
+                  commandString = 'npm install && node lib/bump_gocd_helm_chart_version.js'
                   workingDir = 'codesigning'
                 }
               }

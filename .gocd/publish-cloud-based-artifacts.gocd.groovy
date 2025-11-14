@@ -28,7 +28,7 @@ GoCD.script {
         version              : '',
         revision             : '',
         GIT_USER             : 'gocd-ci-user',
-        GIT_PASSWORD         : secretParam("GOCD_CI_USER_RELEASE_TOKEN"),
+        GIT_PASSWORD         : secretParam('GOCD_CI_USER_RELEASE_TOKEN'),
       ]
       group = 'internal'
       labelTemplate = '${COUNT}'
@@ -40,7 +40,7 @@ GoCD.script {
           url = 'https://git.gocd.io/git/gocd/codesigning'
           destination = 'codesigning'
           autoUpdate = true
-          blacklist = ["**/*.*", "**/*"]
+          blacklist = ['**/*.*', '**/*']
         }
         git('GoCD') {
           branch = 'master'
@@ -48,7 +48,7 @@ GoCD.script {
           url = 'https://git.gocd.io/git/gocd/gocd'
           destination = 'gocd'
           autoUpdate = true
-          blacklist = ["**/*.*", "**/*"]
+          blacklist = ['**/*.*', '**/*']
         }
         dependency('PromoteToStable') {
           pipeline = 'PublishStableRelease'
@@ -67,55 +67,50 @@ GoCD.script {
             job('publish-all-docker-images') {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = [
-                DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USERNAME"),
-                DOCKERHUB_TOKEN   : secretParam("DOCKERHUB_TOKEN")
+                DOCKERHUB_USERNAME: secretParam('DOCKERHUB_USERNAME'),
+                DOCKERHUB_TOKEN   : secretParam('DOCKERHUB_TOKEN')
               ]
               tasks {
                 fetchArtifact {
                   file = true
                   job = 'dist'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'dist/meta/version.json'
                   stage = 'dist'
-                  destination = "codesigning"
+                  destination = 'codesigning'
                 }
                 fetchArtifact {
                   job = 'docker-server'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'docker-server'
                   stage = 'docker'
-                  destination = "codesigning"
+                  destination = 'codesigning'
                 }
                 fetchArtifact {
                   job = 'docker-agent'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'docker-agent'
                   stage = 'docker'
-                  destination = "codesigning"
+                  destination = 'codesigning'
                 }
                 bash {
-                  commandString = "bundle"
+                  commandString = 'bundle install'
                   workingDir = 'codesigning'
                 }
                 bash {
-                  commandString = "bundle exec rake docker:publish_docker_images"
+                  commandString = 'bundle exec rake docker:publish_docker_images'
                   workingDir = 'codesigning'
                 }
                 fetchArtifact {
                   job = 'dist'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'dist/zip'
                   stage = 'dist'
-                  destination = "gocd"
+                  destination = 'gocd'
                 }
                 bash {
                   commandString = 'git config --global user.email "12554687+gocd-ci-user@users.noreply.github.com"'
-                  runIf = 'passed'
-                  workingDir = "codesigning"
+                  workingDir = 'codesigning'
                 }
                 bash {
                   commandString = './gradlew --parallel --max-workers 4 docker:assemble -PskipDockerBuild -PdockerbuildServerZipLocation=\$(readlink -f zip/go-server-*.zip) -PdockerbuildAgentZipLocation=\$(readlink -f zip/go-agent-*.zip) -PdockerGitPush="I_REALLY_WANT_TO_DO_THIS"'
@@ -140,15 +135,13 @@ GoCD.script {
             job('empty_exp_bucket') {
               elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
               tasks {
-                exec {
-                  commandLine = ['bash', '-c', 'bundle && bundle exec rake empty_experimental_bucket']
-                  runIf = 'passed'
-                  workingDir = "codesigning"
+                bash {
+                  commandString = 'bundle install && bundle exec rake empty_experimental_bucket'
+                  workingDir = 'codesigning'
                 }
-                exec {
-                  commandLine = ['bash', '-c', 'bundle exec rake metadata:cleanup_cloud_json[${EXPERIMENTAL_DOWNLOAD_BUCKET}]']
-                  runIf = 'passed'
-                  workingDir = "codesigning"
+                bash {
+                  commandString = 'bundle exec rake metadata:cleanup_cloud_json[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
+                  workingDir = 'codesigning'
                 }
               }
             }
@@ -156,23 +149,21 @@ GoCD.script {
               elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
               environmentVariables = [
                 DOCKERHUB_ORG        : 'gocd',
-                DOCKERHUB_USERNAME   : secretParam("DOCKERHUB_USERNAME"),
-                DOCKERHUB_TOKEN      : secretParam("DOCKERHUB_TOKEN"),
+                DOCKERHUB_USERNAME   : secretParam('DOCKERHUB_USERNAME'),
+                DOCKERHUB_TOKEN      : secretParam('DOCKERHUB_TOKEN'),
               ]
               tasks {
                 fetchArtifact {
                   file = true
                   job = 'dist'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'dist/meta/version.json'
                   stage = 'dist'
-                  destination = "codesigning"
+                  destination = 'codesigning'
                 }
-                exec {
-                  commandLine = ['bash', '-c', 'bundle && bundle exec rake update_cloud_images']
-                  runIf = 'passed'
-                  workingDir = "codesigning"
+                bash {
+                  commandString = 'bundle install && bundle exec rake update_cloud_images'
+                  workingDir = 'codesigning'
                 }
               }
             }
@@ -180,48 +171,40 @@ GoCD.script {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = [
                 DOCKERHUB_ORG     : 'gocdexperimental',
-                DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USERNAME"),
-                DOCKERHUB_TOKEN   : secretParam("DOCKERHUB_TOKEN")
+                DOCKERHUB_USERNAME: secretParam('DOCKERHUB_USERNAME'),
+                DOCKERHUB_TOKEN   : secretParam('DOCKERHUB_TOKEN')
               ]
               tasks {
-                exec {
-                  commandLine = ['bash', '-c', 'bundle && bundle exec rake cleanup_docker']
-                  runIf = 'passed'
-                  workingDir = "codesigning"
+                bash {
+                  commandString = 'bundle install && bundle exec rake cleanup_docker'
+                  workingDir = 'codesigning'
                 }
               }
             }
             job('update_dockerhub_full_description') {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = [
-                DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USERNAME"),
-                DOCKERHUB_TOKEN   : secretParam("DOCKERHUB_TOKEN")
+                DOCKERHUB_USERNAME: secretParam('DOCKERHUB_USERNAME'),
+                DOCKERHUB_TOKEN   : secretParam('DOCKERHUB_TOKEN')
               ]
               tasks {
                 fetchArtifact {
                   job = 'docker-server'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'docker-server'
                   stage = 'docker'
-                  destination = "codesigning"
+                  destination = 'codesigning'
                 }
                 fetchArtifact {
                   job = 'docker-agent'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'docker-agent'
                   stage = 'docker'
-                  destination = "codesigning"
+                  destination = 'codesigning'
                 }
-                exec {
-                  commandLine = ['npm', 'install']
-                  workingDir = "codesigning"
-                }
-                exec {
-                  commandLine = ['bash', '-c', 'node lib/update_dockerhub_full_description.js gocd']
-                  runIf = 'passed'
-                  workingDir = "codesigning"
+                bash {
+                  commandString = 'npm install && node lib/update_dockerhub_full_description.js gocd'
+                  workingDir = 'codesigning'
                 }
               }
             }

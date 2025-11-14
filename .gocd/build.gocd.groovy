@@ -24,7 +24,7 @@ def fetchArtifactTask = { String osType ->
     stage = 'dist'
     job = 'dist'
     source = "dist/${osType}"
-    destination = "codesigning/src"
+    destination = 'codesigning/src'
   })
 }
 
@@ -43,8 +43,8 @@ def getArtifact = { String source1 ->
     file = true
     stage = 'aggregate-jsons'
     job = 'aggregate-jsons'
-    source = "out/latest.json"
-    destination = "codesigning"
+    source = 'out/latest.json'
+    destination = 'codesigning'
   })
 }
 
@@ -71,13 +71,13 @@ GoCD.script {
       materials() {
         git('codesigning') {
           url = 'https://github.com/gocd/codesigning'
-          destination = "codesigning"
-          blacklist = ["**/*.*", "**/*"]
+          destination = 'codesigning'
+          blacklist = ['**/*.*', '**/*']
         }
         git('signing-keys') {
-          url = "https://git.gocd.io/git/gocd/signing-keys"
-          destination = "signing-keys"
-          blacklist = ["**/*.*", "**/*"]
+          url = 'https://git.gocd.io/git/gocd/signing-keys'
+          destination = 'signing-keys'
+          blacklist = ['**/*.*', '**/*']
         }
         dependency('installers') {
           pipeline = 'installers'
@@ -93,7 +93,7 @@ GoCD.script {
         stage('sign-and-upload') {
           cleanWorkingDir = true
           environmentVariables = [
-            GOCD_GPG_PASSPHRASE  : secretParam("GOCD_GPG_PASSPHRASE"),
+            GOCD_GPG_PASSPHRASE  : secretParam('GOCD_GPG_PASSPHRASE'),
           ]
           jobs {
             job('rpm') {
@@ -103,7 +103,7 @@ GoCD.script {
                 add(fetchArtifactTask('rpm'))
                 add(fetchArtifactTask('meta'))
                 bash {
-                  commandString = "bundle"
+                  commandString = 'bundle install'
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -130,7 +130,7 @@ GoCD.script {
                 add(fetchArtifactTask('zip'))
                 add(fetchArtifactTask('meta'))
                 bash {
-                  commandString = "bundle"
+                  commandString = 'bundle install'
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -146,7 +146,7 @@ GoCD.script {
                 add(fetchArtifactTask('win'))
                 add(fetchArtifactTask('meta'))
                 bash {
-                  commandString = "bundle"
+                  commandString = 'bundle install'
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -161,7 +161,7 @@ GoCD.script {
                 add(fetchArtifactTask('osx'))
                 add(fetchArtifactTask('meta'))
                 bash {
-                  commandString = "bundle"
+                  commandString = 'bundle install'
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -173,43 +173,36 @@ GoCD.script {
             job('upload-docker-image') {
               elasticProfileId = 'ecs-gocd-dev-build'
               environmentVariables = [
-                DOCKERHUB_USERNAME: secretParam("DOCKERHUB_USERNAME"),
-                DOCKERHUB_TOKEN   : secretParam("DOCKERHUB_TOKEN")
+                DOCKERHUB_USERNAME: secretParam('DOCKERHUB_USERNAME'),
+                DOCKERHUB_TOKEN   : secretParam('DOCKERHUB_TOKEN')
               ]
 
               tasks {
                 fetchArtifact {
                   job = 'docker-server'
                   pipeline = 'installers'
-                  runIf = 'passed'
                   source = 'docker-server'
                   stage = 'docker'
-                  destination = "codesigning"
+                  destination = 'codesigning'
                 }
                 fetchArtifact {
                   job = 'docker-agent'
                   pipeline = 'installers'
-                  runIf = 'passed'
                   source = 'docker-agent'
                   stage = 'docker'
-                  destination = "codesigning"
+                  destination = 'codesigning'
                 }
                 bash {
-                  commandString = "bundle"
+                  commandString = 'bundle install'
                   workingDir = 'codesigning'
                 }
                 bash {
-                  commandString = "bundle exec rake docker:upload_experimental_docker_images"
+                  commandString = 'bundle exec rake docker:upload_experimental_docker_images'
                   workingDir = 'codesigning'
                 }
-                exec {
-                  commandLine = ['npm', 'install']
-                  workingDir = "codesigning"
-                }
                 bash {
-                  commandString = 'node lib/update_dockerhub_full_description.js gocdexperimental'
-                  runIf = 'passed'
-                  workingDir = "codesigning"
+                  commandString = 'npm install && node lib/update_dockerhub_full_description.js gocdexperimental'
+                  workingDir = 'codesigning'
                 }
               }
             }
@@ -218,10 +211,10 @@ GoCD.script {
 
         stage('aggregate-jsons') {
           environmentVariables = [
-            GOCD_GPG_PASSPHRASE: secretParam("GOCD_GPG_PASSPHRASE"),
+            GOCD_GPG_PASSPHRASE: secretParam('GOCD_GPG_PASSPHRASE'),
             DOCKERHUB_ORG      : 'gocdexperimental',
-            DOCKERHUB_USERNAME : secretParam("DOCKERHUB_USERNAME"),
-            DOCKERHUB_TOKEN    : secretParam("DOCKERHUB_TOKEN")
+            DOCKERHUB_USERNAME : secretParam('DOCKERHUB_USERNAME'),
+            DOCKERHUB_TOKEN    : secretParam('DOCKERHUB_TOKEN')
           ]
           jobs {
             job('aggregate-jsons') {
@@ -236,7 +229,7 @@ GoCD.script {
                 addAll(cleanTasks())
                 add(fetchArtifactTask('meta'))
                 bash {
-                  commandString = "bundle"
+                  commandString = 'bundle install'
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -250,7 +243,7 @@ GoCD.script {
 
         stage('metadata') {
           environmentVariables = [
-            GOCD_GPG_PASSPHRASE: secretParam("GOCD_GPG_PASSPHRASE"),
+            GOCD_GPG_PASSPHRASE: secretParam('GOCD_GPG_PASSPHRASE'),
           ]
           jobs {
             job('generate') {
@@ -260,7 +253,7 @@ GoCD.script {
                 add(fetchArtifactTask('meta'))
                 add(getArtifact())
                 bash {
-                  commandString = "bundle"
+                  commandString = 'bundle install'
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -278,7 +271,7 @@ GoCD.script {
               elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
               tasks {
                 bash {
-                  commandString = "bundle"
+                  commandString = 'bundle install'
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -297,9 +290,9 @@ GoCD.script {
           }
           environmentVariables = [
             EXPERIMENTAL_RELEASE        : 'true', // Auto-releases to central when false
-            GOCD_GPG_PASSPHRASE         : secretParam("GOCD_GPG_PASSPHRASE"),
-            MAVEN_CENTRAL_TOKEN_USERNAME: secretParam("MAVEN_CENTRAL_TOKEN_USERNAME"),
-            MAVEN_CENTRAL_TOKEN_PASSWORD: secretParam("MAVEN_CENTRAL_TOKEN_PASSWORD"),
+            GOCD_GPG_PASSPHRASE         : secretParam('GOCD_GPG_PASSPHRASE'),
+            MAVEN_CENTRAL_TOKEN_USERNAME: secretParam('MAVEN_CENTRAL_TOKEN_USERNAME'),
+            MAVEN_CENTRAL_TOKEN_PASSWORD: secretParam('MAVEN_CENTRAL_TOKEN_PASSWORD'),
           ]
           jobs {
             job('upload-maven') {
@@ -309,33 +302,30 @@ GoCD.script {
                   file = true
                   job = 'dist'
                   pipeline = 'installers'
-                  runIf = 'passed'
                   source = 'dist/meta/version.json'
                   stage = 'dist'
-                  destination = "codesigning"
+                  destination = 'codesigning'
                 }
                 fetchArtifact {
                   job = 'dist'
                   pipeline = 'installers'
-                  runIf = 'passed'
                   source = 'go-plugin-api'
                   stage = 'dist'
-                  destination = "codesigning"
+                  destination = 'codesigning'
                 }
                 fetchArtifact {
                   job = 'dist'
                   pipeline = 'installers'
-                  runIf = 'passed'
                   source = 'go-plugin-config-repo'
                   stage = 'dist'
-                  destination = "codesigning"
+                  destination = 'codesigning'
                 }
                 bash {
-                  commandString = "bundle"
+                  commandString = 'bundle install'
                   workingDir = 'codesigning'
                 }
                 bash {
-                  commandString = "git pull && bundle exec rake maven:upload_to_maven"
+                  commandString = 'git pull && bundle exec rake maven:upload_to_maven'
                   workingDir = 'codesigning'
                 }
               }
@@ -358,13 +348,13 @@ GoCD.script {
       materials() {
         git('codesigning') {
           url = 'https://github.com/gocd/codesigning'
-          destination = "codesigning"
-          blacklist = ["**/*.*", "**/*"]
+          destination = 'codesigning'
+          blacklist = ['**/*.*', '**/*']
         }
         git('signing-keys') {
-          url = "https://git.gocd.io/git/gocd/signing-keys"
-          destination = "signing-keys"
-          blacklist = ["**/*.*", "**/*"]
+          url = 'https://git.gocd.io/git/gocd/signing-keys'
+          destination = 'signing-keys'
+          blacklist = ['**/*.*', '**/*']
         }
         dependency('code-sign') {
           pipeline = 'code-sign'
@@ -392,11 +382,11 @@ GoCD.script {
                   pipeline = 'installers/code-sign'
                   stage = 'dist'
                   job = 'dist'
-                  source = "dist/meta"
-                  destination = "codesigning/src"
+                  source = 'dist/meta'
+                  destination = 'codesigning/src'
                 }
                 bash {
-                  commandString = "bundle"
+                  commandString = 'bundle install'
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -410,7 +400,7 @@ GoCD.script {
 
         stage('create-repositories') {
           environmentVariables = [
-            GOCD_GPG_PASSPHRASE  : secretParam("GOCD_GPG_PASSPHRASE"),
+            GOCD_GPG_PASSPHRASE  : secretParam('GOCD_GPG_PASSPHRASE'),
           ]
           jobs {
             job('apt') {
@@ -420,8 +410,8 @@ GoCD.script {
                   pipeline = 'installers/code-sign'
                   stage = 'dist'
                   job = 'dist'
-                  source = "dist/meta"
-                  destination = "codesigning/src"
+                  source = 'dist/meta'
+                  destination = 'codesigning/src'
                 }
                 bash {
                   commandString = 'rake --trace apt:createrepo[${STABLE_DOWNLOAD_BUCKET}]'
@@ -437,11 +427,11 @@ GoCD.script {
                   pipeline = 'installers/code-sign'
                   stage = 'dist'
                   job = 'dist'
-                  source = "dist/meta"
-                  destination = "codesigning/src"
+                  source = 'dist/meta'
+                  destination = 'codesigning/src'
                 }
                 bash {
-                  commandString = "bundle"
+                  commandString = 'bundle install'
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -462,11 +452,11 @@ GoCD.script {
                   pipeline = 'installers/code-sign'
                   stage = 'dist'
                   job = 'dist'
-                  source = "dist/meta"
-                  destination = "codesigning/src"
+                  source = 'dist/meta'
+                  destination = 'codesigning/src'
                 }
                 bash {
-                  commandString = "bundle"
+                  commandString = 'bundle install'
                   workingDir = 'codesigning'
                 }
                 bash {
@@ -487,11 +477,11 @@ GoCD.script {
                   pipeline = 'installers/code-sign'
                   stage = 'dist'
                   job = 'dist'
-                  source = "dist/meta"
-                  destination = "codesigning/src"
+                  source = 'dist/meta'
+                  destination = 'codesigning/src'
                 }
                 bash {
-                  commandString = "bundle"
+                  commandString = 'bundle install'
                   workingDir = 'codesigning'
                 }
                 bash {

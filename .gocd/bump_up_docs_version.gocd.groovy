@@ -32,7 +32,7 @@ GoCD.script {
           branch = 'master'
           shallowClone = false
           url = 'https://github.com/gocd/release-activity-scripts'
-          blacklist = ["**/*.*", "**/*"]
+          blacklist = ['**/*.*', '**/*']
         }
         dependency('PromoteToStable') {
           pipeline = 'PublishStableRelease'
@@ -50,84 +50,72 @@ GoCD.script {
             job('api.go.cd') {
               elasticProfileId = 'ecs-gocd-dev-build'
               tasks {
-                exec {
-                  commandLine = ['bash', '-c', 'bundle']
-                  runIf = 'passed'
+                bash {
+                  commandString = 'bundle install'
                 }
                 fetchArtifact {
                   file = true
                   job = 'dist'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'dist/meta/version.json'
                   stage = 'dist'
                 }
-                exec {
-                  commandLine = ['bash', '-c', 'REPO_NAME=api.go.cd bundle exec rake bump_docs_version']
-                  runIf = 'passed'
+                bash {
+                  commandString = 'REPO_NAME=api.go.cd bundle exec rake bump_docs_version'
                 }
               }
             }
             job('plugin-api.go.cd') {
               elasticProfileId = 'ecs-gocd-dev-build'
               tasks {
-                exec {
-                  commandLine = ['bash', '-c', 'bundle']
-                  runIf = 'passed'
+                bash {
+                  commandString = 'bundle install'
                 }
                 fetchArtifact {
                   file = true
                   job = 'dist'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'dist/meta/version.json'
                   stage = 'dist'
                 }
-                exec {
-                  commandLine = ['bash', '-c', 'REPO_NAME=plugin-api.go.cd bundle exec rake bump_docs_version']
-                  runIf = 'passed'
+                bash {
+                  commandString = 'REPO_NAME=plugin-api.go.cd bundle exec rake bump_docs_version'
                 }
               }
             }
             job('developer.go.cd') {
               elasticProfileId = 'ecs-gocd-dev-build'
               tasks {
-                exec {
-                  commandLine = ['bash', '-c', 'bundle']
-                  runIf = 'passed'
+                bash {
+                  commandString = 'bundle install'
                 }
                 fetchArtifact {
                   file = true
                   job = 'dist'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'dist/meta/version.json'
                   stage = 'dist'
                 }
-                exec {
-                  commandLine = ['bash', '-c', 'REPO_NAME=developer.go.cd bundle exec rake bump_docs_version']
-                  runIf = 'passed'
+                bash {
+                  commandString = 'REPO_NAME=developer.go.cd bundle exec rake bump_docs_version'
                 }
               }
             }
             job('docs.go.cd') {
               elasticProfileId = 'ecs-gocd-dev-build'
               tasks {
-                exec {
-                  commandLine = ['bash', '-c', 'bundle']
-                  runIf = 'passed'
+                bash {
+                  commandString = 'bundle install'
                 }
                 fetchArtifact {
                   file = true
                   job = 'dist'
                   pipeline = 'installers/code-sign/PublishStableRelease'
-                  runIf = 'passed'
                   source = 'dist/meta/version.json'
                   stage = 'dist'
                 }
-                exec {
-                  commandLine = ['bash', '-c', 'REPO_NAME=docs.go.cd bundle exec rake bump_docs_version']
-                  runIf = 'passed'
+                bash {
+                  commandString = 'REPO_NAME=docs.go.cd bundle exec rake bump_docs_version'
                 }
               }
             }

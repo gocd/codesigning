@@ -4,9 +4,9 @@ tmp/
 debsig/
 .idea/
 *.iml
-gocd-groovy-dsl-config-plugin-*.jar
 .bundle/ruby
 node_modules
 .node-version
 .nvmrc
-*.jar
+.gradle/
+build/

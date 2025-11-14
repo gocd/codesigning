@@ -1,0 +1,20 @@
+plugins {
+  id 'groovy'
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compileOnly 'org.apache.groovy:groovy:5.0.2'
+  compileOnly 'cd.go.groovydsl:dsl:3.1.0-894'
+}
+
+sourceSets {
+  main {
+    groovy {
+      srcDirs = ['.']
+    }
+  }
+}

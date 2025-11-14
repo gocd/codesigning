@@ -23,3 +23,10 @@ updates:
     groups:
       maven-deps:
         patterns: [ "*" ]
+  - package-ecosystem: gradle
+    directory: /.gocd
+    schedule:
+      interval: monthly
+    groups:
+      maven-deps:
+        patterns: [ "*" ]

@@ -5,7 +5,7 @@ def prune_experimental_bucket_for(binary_type, all_types = false)
   experimental_bucket_url = ENV["EXPERIMENTAL_DOWNLOAD_BUCKET"]
   raise "Please specify experimental bucket url" unless experimental_bucket_url
 
-  binary_type = all_types ? "" : "/#{binary_type}"
+  binary_type = "" if all_types
 
   #fetch the list of folders inside binaries which are not top 10 and pass it to rm command
   sh("aws s3 ls s3://#{experimental_bucket_url}/binaries/ | sort --version-sort -k2 | head -n-#{NUM_RETAINED_VERSIONS} | awk '{print $2}' | xargs -I DIR aws s3 rm s3://#{experimental_bucket_url}/binaries/DIR#{binary_type} --recursive")

@@ -132,11 +132,11 @@ GoCD.script {
             STABLE_DOWNLOAD_BUCKET      : 'downloadgocdio-downloadgocdios3-192sau789jtkh',
           ]
           jobs {
-            job('empty_exp_bucket') {
+            job('prune_experimental_releases') {
               elasticProfileId = 'ecs-gocd-dev-build-release-aws-privileged'
               tasks {
                 bash {
-                  commandString = 'bundle install && bundle exec rake empty_experimental_bucket'
+                  commandString = 'bundle install && bundle exec rake prune_experimental_bucket'
                   workingDir = 'codesigning'
                 }
                 bash {

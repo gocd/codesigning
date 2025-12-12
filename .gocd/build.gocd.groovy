@@ -107,7 +107,7 @@ GoCD.script {
                   workingDir = 'codesigning'
                 }
                 bash {
-                  commandString = 'bundle exec rake --trace rpm:sign rpm:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}] yum:createrepo[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
+                  commandString = 'bundle exec rake --trace rpm:sign rpm:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}] prune_experimental_bucket_for_type[rpm] yum:createrepo[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
                   workingDir = 'codesigning'
                 }
               }
@@ -119,7 +119,7 @@ GoCD.script {
                 add(fetchArtifactTask('deb'))
                 add(fetchArtifactTask('meta'))
                 bash {
-                  commandString = 'rake --trace deb:sign[${EXPERIMENTAL_DOWNLOAD_BUCKET}] deb:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}] apt:createrepo[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
+                  commandString = 'rake --trace deb:sign[${EXPERIMENTAL_DOWNLOAD_BUCKET}] deb:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}] prune_experimental_bucket_for_type[deb] apt:createrepo[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
                   workingDir = 'codesigning'
                 }
               }
@@ -134,7 +134,7 @@ GoCD.script {
                   workingDir = 'codesigning'
                 }
                 bash {
-                  commandString = 'bundle exec rake --trace zip:sign zip:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
+                  commandString = 'bundle exec rake --trace zip:sign zip:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}] prune_experimental_bucket_for_type[generic]'
                   workingDir = 'codesigning'
                 }
               }
@@ -150,7 +150,7 @@ GoCD.script {
                   workingDir = 'codesigning'
                 }
                 bash {
-                  commandString = 'bundle exec rake --trace win:metadata win:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
+                  commandString = 'bundle exec rake --trace win:metadata win:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}] prune_experimental_bucket_for_type[win]'
                   workingDir = 'codesigning'
                 }
               }
@@ -165,7 +165,7 @@ GoCD.script {
                   workingDir = 'codesigning'
                 }
                 bash {
-                  commandString = 'bundle exec rake --trace osx:sign_as_zip osx:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}]'
+                  commandString = 'bundle exec rake --trace osx:sign_as_zip osx:upload[${EXPERIMENTAL_DOWNLOAD_BUCKET}] prune_experimental_bucket_for_type[osx]'
                   workingDir = 'codesigning'
                 }
               }

@@ -11,7 +11,7 @@ namespace :gpg do
     chmod 0700, ENV['GNUPGHOME']
     cd '../signing-keys' do
       File.write("gpg-passphrase", ENV['GOCD_GPG_PASSPHRASE'].strip)
-      sh("set -o pipefail; gpg --quiet --batch --pinentry-mode loopback --passphrase-file gpg-passphrase --decrypt gpg-keys.pem.gpg | gpg --import --batch")
+      sh("gpg --quiet --batch --pinentry-mode loopback --passphrase-file gpg-passphrase --decrypt gpg-keys.pem.gpg | gpg --import --batch")
       File.delete("gpg-passphrase")
     end
   end

@@ -1,0 +1,16 @@
+[settings]
+ruby.compile = false
+
+[tools]
+"ruby" = "4.0"
+
+# Core release publishing tools
+"node" = "24"
+"aws-cli" = { version = "latest", symlink_bins = true }
+
+# docker publishing
+"java" = "temurin-25"
+"regctl" = "latest"
+
+# plugin lib publishing
+"maven" = "3"

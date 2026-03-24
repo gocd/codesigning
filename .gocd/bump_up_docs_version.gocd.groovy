@@ -50,9 +50,6 @@ GoCD.script {
             job('api.go.cd') {
               elasticProfileId = 'ecs-gocd-dev-build'
               tasks {
-                bash {
-                  commandString = 'bundle install'
-                }
                 fetchArtifact {
                   file = true
                   job = 'dist'
@@ -61,16 +58,13 @@ GoCD.script {
                   stage = 'dist'
                 }
                 bash {
-                  commandString = 'REPO_NAME=api.go.cd bundle exec rake bump_docs_version'
+                  commandString = 'REPO_NAME=api.go.cd rake bump_docs_version'
                 }
               }
             }
             job('plugin-api.go.cd') {
               elasticProfileId = 'ecs-gocd-dev-build'
               tasks {
-                bash {
-                  commandString = 'bundle install'
-                }
                 fetchArtifact {
                   file = true
                   job = 'dist'
@@ -79,16 +73,13 @@ GoCD.script {
                   stage = 'dist'
                 }
                 bash {
-                  commandString = 'REPO_NAME=plugin-api.go.cd bundle exec rake bump_docs_version'
+                  commandString = 'REPO_NAME=plugin-api.go.cd rake bump_docs_version'
                 }
               }
             }
             job('developer.go.cd') {
               elasticProfileId = 'ecs-gocd-dev-build'
               tasks {
-                bash {
-                  commandString = 'bundle install'
-                }
                 fetchArtifact {
                   file = true
                   job = 'dist'
@@ -97,16 +88,13 @@ GoCD.script {
                   stage = 'dist'
                 }
                 bash {
-                  commandString = 'REPO_NAME=developer.go.cd bundle exec rake bump_docs_version'
+                  commandString = 'REPO_NAME=developer.go.cd rake bump_docs_version'
                 }
               }
             }
             job('docs.go.cd') {
               elasticProfileId = 'ecs-gocd-dev-build'
               tasks {
-                bash {
-                  commandString = 'bundle install'
-                }
                 fetchArtifact {
                   file = true
                   job = 'dist'
@@ -115,7 +103,7 @@ GoCD.script {
                   stage = 'dist'
                 }
                 bash {
-                  commandString = 'REPO_NAME=docs.go.cd bundle exec rake bump_docs_version'
+                  commandString = 'REPO_NAME=docs.go.cd rake bump_docs_version'
                 }
               }
             }

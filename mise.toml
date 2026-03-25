@@ -2,7 +2,7 @@
 ruby.compile = false
 
 [tools]
-"ruby" = "4.0.1"
+"ruby" = "4.0"
 
 # Core release publishing tools
 "node" = "24"

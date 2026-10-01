@@ -7,8 +7,8 @@ repositories {
 }
 
 dependencies {
-  compileOnly 'org.apache.groovy:groovy:5.1.1'
-  compileOnly 'cd.go.groovydsl:dsl:3.1.2-958'
+  compileOnly 'org.apache.groovy:groovy:6.0.0'
+  compileOnly 'cd.go.groovydsl:dsl:3.1.2-959'
 }
 
 sourceSets {

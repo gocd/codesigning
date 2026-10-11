@@ -20,7 +20,7 @@
   },
   "overrides": {
     "docker-hub-api": {
-      "lodash": "^4.17.21",
+      "lodash": "^4.18.1",
       "request": "npm:@cypress/request@^4.0.1"
     },
     "github-base": {

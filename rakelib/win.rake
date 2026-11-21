@@ -15,7 +15,7 @@ namespace :win do
       cp f, "#{output_dir}"
     end
 
-    generate_metadata_for_single_dir output_dir, '*.exe', :win, { architecture: 'x64', jre: { included: true } }
+    generate_metadata_for_single_dir output_dir, '*.exe', :win, { architecture: 'all', jre: { included: true } }
   end
 
   desc "upload the win binaries, after generating metadata"
